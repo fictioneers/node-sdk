@@ -15,58 +15,75 @@ The following methods are provided in addition to the methods that map to the Fi
 - `getUserId()`
 - `setUserId()`
 
-The method `getAccessToken()` is used internally by the SDK, so you shouldn't need to use it, but calling it will give reset and return the access token used by the SDK to call the API.
-
 These methods map to the corresponding methods in the API:
+
+## Auth ##
+
+The method `getAccessToken()` is used internally by the SDK, so you shouldn't need to use it, but calling it will return the access token used by the SDK to call the API.
+
+The method `setAccessToken()` will both call `getAccessToken()` to generate a new access token and reset the access token within the SDK, if the SDK's current access token is either not present or has expired. Again, you shouldn't normally need to use this method.
 
 ## Admin ##
 
 Admin service to programatically manage timelines and timeline users. A secret API Key is required in the HTTP Authorization header.
 
-- `getTimelines()`
-- `getTimeline({timelineId})`
-- `getTimelineUsers({timelineId})`
-- `deleteTimelineUsers({timelineId})`
-- `getTimelineUser({timelineId, userId = null})`
-- `deleteTimelineUser({timelineId, userId = null})`
-- `getTimelineEventStateChanges({timelineId})`
+- `getTimelines()` => `GET /timelines`
+- `getTimeline({timelineId})` => `GET /timelines/${timelineId}`
+- `getTimelineUsers({timelineId})` => `GET /timelines/${timelineId}/users`
+- `deleteTimelineUsers({timelineId})` => `DELETE /timelines/${timelineId}/users`
+- `getTimelineUser({timelineId, userId = null})` => `GET /timelines/${timelineId}/users/${userId}`
+- `deleteTimelineUser({timelineId, userId = null})` => `DELETE /timelines/${timelineId}/users/${userId}`
+- `getTimelineEventStateChanges({timelineId})` => `GET /timelines/${timelineId}/event-state-changes/`
 
 ## Users ##
 
 User from the authentication token.
 
-- `getUser({includeNarrativeState = false})`
-- `deleteUser()`
-- `updateUser({displayName})`
-- `createUser({timelineId, disableTimeGuards = false, pauseAtBeats = false})`
-- `getUserStoryState()`
-- `progressUserStoryStateEvents({maxSteps = null, pauseAtBeats = true})`
+- `getUser({includeNarrativeState = false})` => `GET /users/me`
+- `deleteUser()` => `DELETE /users/me`
+- `updateUser({displayName})` => `PATCH /users/me`
+- `createUser({timelineId, disableTimeGuards = false, pauseAtBeats = false})` => `POST /users`
+
+## User story state ##
+
+Methods relating to the user's story state
+
+- `getUserStoryState()` => `GET /user-story-state`
+- `updateUserStoryState({currentTimelineEventId})` => `PATCH /user-story-state`
+- `progressUserStoryStateEvents({maxSteps = null, pauseAtBeats = true})` => `POST /user-story-state/progress-events`
+
+## User timeline events ##
+
+Methods relating to timeline events, as distinct from hooks.
+
+- `getUserTimelineEvents()` => `GET /user-timeline-events`
+- `updateUserTimelineEvent({timelineEventId, state})` => `PATCH /user-timeline-events/${timelineEventId}`
 
 ## User timeline hooks ##
 
 Timeline hooks for the authenticated user.
 
-- `getUserTimelineHooks()`
+- `getUserTimelineHooks()` => `GET /user-timeline-hooks`
 
 ## User interactables ##
 
 Interactables for the authenticated user.
 
-- `getUserInteractables()`
-- `getUserInteractable({interactableId}) `
-- `updateUserInteractable({interactableId, state})`
+- `getUserInteractables()` => `GET /user-interactable`
+- `getUserInteractable({interactableId}) ` => `GET /user-interactables/${interactableId}`
+- `updateUserInteractable({interactableId, state})` => `PATCH /user-interactables/${interactableId}`
 
 ##  Timeline interactables ##
 
 All the interactables referenced on the users current timeline (irrespective of their current position).
 
-- `getTimelineInteractables()`
-- `getTimelineInteractable({interactableId})`
+- `getTimelineInteractables()` => `GET /timeline-interactables`
+- `getTimelineInteractable({interactableId})` => `GET /timeline-interactables/${interactableId}`
 
 ## Timeline events ##
 
 All the events referenced on the users current timeline (irrespective of their current posiiton).
 
-- `getTimelineEvents()`
+- `getTimelineEvents()` => `GET /timeline-events`
 
 For further information on these methods and the parameters, please view [the documentation](https://storage.googleapis.com/fictioneers-developer-docs/build/index.html)
