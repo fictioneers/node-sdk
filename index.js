@@ -34,20 +34,21 @@ class Fictioneers {
      * @param {string} apiSecretKey 
      * @returns {object}
      */
-    static getAccessToken = async({userId, apiSecretKey}) => {
-        const response = await fetch(Fictioneers._endpoint + "/token", {
+    async getAccessToken() {
+        const response = await fetch(this._endpoint + "/auth/token", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": apiSecretKey
+                "Authorization": this.apiSecretKey
             },
             body: JSON.stringify({
-                user_id: userId
+                user_id: this.userId
             })
         })
 
         const accessToken = await response.json()
+        this.accessToken = accessToken
         return {
             "accessToken": accessToken.id_token,
             "expiresIn": accessToken.expires_in
@@ -64,15 +65,17 @@ class Fictioneers {
 
     /**
      * If necessary, generate and save a new ID Token which can be used to authenticate against the Audience APIs.
+     * @returns {object}
      */
     async setAccessToken() {
         if(!this.accessToken || this.accessTokenExpiry < Date.now()){
-            const {accessToken, expiresIn} = await Fictioneers.getAccessToken({
-                userId: this.userId,
-                apiSecretKey: this.apiSecretKey
-            })
+            const {accessToken, expiresIn} = await this.getAccessToken()
             this.accessToken = accessToken
             this.accessTokenExpiry = Date.now() + ((expiresIn - 10) * 1000) // when the access token will expire, minus a period of 10 seconds
+        }
+        return {
+            "accessToken": this.accessToken,
+            "expiresIn": ((this.accessTokenExpiry - Date.now()) / 1000) + 10
         }
     }
 
@@ -108,6 +111,9 @@ class Fictioneers {
 
     async _getAuthHeadersBearer(){
         await this.setAccessToken()
+        if(!this.accessToken) {
+            throw new Error("Could not assemble auth headers with bearer - no access token")
+        }
         return {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -118,7 +124,7 @@ class Fictioneers {
     async _doFetch({url, method = "GET", auth = "bearer", body = null, additionalHeaders = []}) {
         let headers
         if(auth == "bearer"){
-            headers = this._getAuthHeadersBearer()
+            headers = await this._getAuthHeadersBearer()
         } else {
             headers = this._getAuthHeaderSecretKey()
         }
@@ -129,11 +135,20 @@ class Fictioneers {
             method: method,
             headers: headers
         }
-        if(method != "GET" && method != "HEAD" && body){
+        if(method != "GET" && method != "HEAD" && method != "DELETE" && body){
             request.body = JSON.stringify(body)
         }
         const response = await fetch(this._endpoint + url, request)
-        return response.json()
+        if(method == "DELETE"){
+            return {
+                data: null,
+                error: response.error ? response.error : null,
+                meta: null,
+                status: 204
+            }
+        } else {
+            return response.json()
+        }
     }
 
     /* Admin */
@@ -335,6 +350,21 @@ class Fictioneers {
     }
     
     /**
+     * Updates current timeline event ID
+     * @param {string} currentTimelineEventId 
+     * @returns {Promise}
+     */
+    async updateUserStoryState({currentTimelineEventId}) {
+        return this._doFetch({
+            url: "/user-story-state",
+            method: "PATCH",
+            body: {
+                "current_timeline_event_id": currentTimelineEventId
+            }
+        })
+    }
+
+    /**
      * Progress events based on the authenticated user available transition events.
      * @param {(null|number)} maxSteps 
      * @param {boolean} pauseAtBeats 
@@ -354,6 +384,34 @@ class Fictioneers {
             body: {
                 "max_steps": maxSteps,
                 "pause_at_beats": pauseAtBeats
+            }
+        })
+    }
+
+
+    /* User timeline events */
+    
+    /**
+     * Gets all timeline events
+     * @returns {Promise}
+     */
+    async getUserTimelineEvents(){
+        return this._doFetch({
+            url: "/user-timeline-events"
+        })
+    }
+
+    /**
+     * Marks a timeline event as COMPLETED (aka visited), or another state
+     * @param {string} state 
+     * @returns {Promise}
+     */
+    async updateUserTimelineEvent({timelineEventId, state}){
+        return this._doFetch({
+            url: `/user-timeline-events/${timelineEventId}`,
+            method: "PATCH",
+            body: {
+                state: state
             }
         })
     }
