@@ -106,7 +106,7 @@ class Fictioneers {
         }
     }
 
-    _getAuthHeadersBearer(){
+    async _getAuthHeadersBearer(){
         await this.setAccessToken()
         return {
             "Content-Type": "application/json",
@@ -125,11 +125,14 @@ class Fictioneers {
         for (const [key, value] of additionalHeaders.entries()){
             headers[key] = value
         }
-        const response = await fetch(this._endpoint + url, {
+        let request = {
             method: method,
-            headers: headers,
-            body: JSON.stringify(body)
-        })
+            headers: headers
+        }
+        if(method != "GET" && method != "HEAD" && body){
+            request.body = JSON.stringify(body)
+        }
+        const response = await fetch(this._endpoint + url, request)
         return response.json()
     }
 
