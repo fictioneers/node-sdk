@@ -1,14 +1,22 @@
 {
-  "name": "fictioneers-sdk",
+  "name": "fictioneers-node-sdk",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server-side javascript SDK wrapping the Fictioneers API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fictioneers/node-sdk.git"
+  },
   "keywords": [],
-  "author": "",
+  "author": "Fictioneers",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fictioneers/node-sdk/issues"
+  },
+  "homepage": "https://github.com/fictioneers/node-sdk#readme",
   "dependencies": {
     "node-fetch": "^3.2.1",
     "uuid": "^8.3.2"

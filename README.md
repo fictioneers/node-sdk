@@ -4,8 +4,8 @@ This is a simple SDK for use when connecting to the Fictioneers API from the ser
 To use, you require your Fictioneers secret key, and optionally, a user ID. If you do not provide a user ID, and the API call requires one, the SDK will create one for you, which you can retrieve either from the API response or from the SDK with `getUserId()`.
 
     const fictioneers = new Fictioneers({
-        apiSecretKey: "s_xxxxx",
-        userId: "1234-5678"
+        apiSecretKey: "s_xxxxx", // mandatory
+        userId: "1234-5678" // optional
     })
 
 The methods are asynchronous and (mostly) return a Promise which resolves to JSON. Use like this, for example:
