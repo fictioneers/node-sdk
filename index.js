@@ -403,6 +403,7 @@ class Fictioneers {
 
     /**
      * Marks a timeline event as COMPLETED (aka visited), or another state
+     * @param {string} timelineEventId
      * @param {string} state 
      * @returns {Promise}
      */
