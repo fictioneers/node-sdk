@@ -180,6 +180,19 @@ class Fictioneers {
     }
 
     /**
+     * Representation of a single timeline's events and metadata.
+     * @param {string} timelineId 
+     * @returns {Promise}
+     * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#lists-all-timeline-events-2
+     */
+     async getTimelineEvents({timelineId}) {
+        return this._doFetch({
+            url: `/timelines/${timelineId}/timeline-events`,
+            auth: "key"
+        })
+    }
+
+    /**
      * List of all users on timeline.
      * @param {string} timelineId 
      * @returns {Promise}
@@ -503,21 +516,7 @@ class Fictioneers {
             url: `/timeline-interactables/${interactableId}`,
         })
     }
-    
 
-    /* Timeline events */
-    /* All the events referenced on the users current timeline (irrespective of their current posiiton). */
-
-    /**
-     * List endpoint for timeline events.
-     * @returns {Promise}
-     * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#lists-all-timeline-events
-     */
-    async getTimelineEvents() {
-        return this._doFetch({
-            url: "/timeline-events",
-        })
-    }
 }
 
 export default Fictioneers
