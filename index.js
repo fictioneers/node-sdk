@@ -50,7 +50,7 @@ class Fictioneers {
         const accessToken = await response.json()
         this.accessToken = accessToken
         return {
-            "accessToken": accessToken.id_token,
+            "accessToken": accessToken.access_token,
             "expiresIn": accessToken.expires_in
         }
     }
@@ -272,7 +272,6 @@ class Fictioneers {
 
     /**
      * Retrieve detailed representation of the current user.
-     * Optionally include the serialized user narrative by including a include_narrative_state GET param.
      * @returns {Promise}
      * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieve-current-user
      */
@@ -282,9 +281,6 @@ class Fictioneers {
         }
         return this._doFetch({
             url: "/users/me",
-            body:{
-                "include_narrative_state": includeNarrativeState
-            }
         })
     }
 
@@ -297,22 +293,6 @@ class Fictioneers {
         return this._doFetch({
             url: "/users/me",
             method: "DELETE"
-        })
-    }
-
-    /**
-     * Update the display name of the current user.
-     * @param {string} displayName 
-     * @returns {Promise}
-     * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#update-current-user
-     */
-    async updateUser({displayName}) {
-        return this._doFetch({
-            url: "/users/me",
-            method: "PATCH",
-            body: {
-                "display_name": displayName
-            }
         })
     }
 
@@ -446,7 +426,6 @@ class Fictioneers {
     }
 
 
-
     /* User interactables */
     /* Interactables for the authenticated user. */
 
@@ -487,33 +466,6 @@ class Fictioneers {
             body: {
                 "state": state
             }
-        })
-    }
-
-
-    /* Timeline interactables */
-    /* All the interactables referenced on the users current timeline (irrespective of their current position). */
-
-    /**
-     * List endpoint for timeline interactables (filterable by type).
-     * @returns {Promise}
-     * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#lists-timeline-interactables
-     */
-    async getTimelineInteractables() {
-        return this._doFetch({
-            url: "/timeline-interactables",
-        })
-    }
-
-    /**
-     * Retrieves a specified timeline interactable
-     * @param {string} interactableId 
-     * @returns {Promise}
-     * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieves-timeline-interactable
-     */
-    async getTimelineInteractable({interactableId}) {
-        return this._doFetch({
-            url: `/timeline-interactables/${interactableId}`,
         })
     }
 
