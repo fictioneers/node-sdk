@@ -25,7 +25,7 @@ class Fictioneers {
         this.userId = userId
         this.accessToken = null // only create this the first time when needed
         this.accessTokenExpiry = null
-        this._endpoint = "https://api.fictioneers.co.uk/api/v1"
+        this._endpoint = "https://api.fictioneers.co.uk/v1"
     }
 
     /**
