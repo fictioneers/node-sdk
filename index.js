@@ -121,7 +121,15 @@ class Fictioneers {
         }
     }
 
-    async _doFetch({url, method = "GET", auth = "bearer", body = null, additionalHeaders = []}) {
+    async _doFetch({url, method = "GET", auth = "bearer", body = null, additionalHeaders = [], deprecated = false}) {
+        if(deprecated) {
+            return {
+                data: null,
+                error: "This API endpoint has been deprecated.",
+                meta: null,
+                status: 299
+            }
+        }
         let headers
         if(auth == "bearer"){
             headers = await this._getAuthHeadersBearer()
@@ -428,6 +436,7 @@ class Fictioneers {
 
     /* User interactables */
     /* Interactables for the authenticated user. */
+    /* These endpoints are now deprecated as of 08/04/2022 in favour of user-timeline-events - but not removed as yet */
 
     /**
      * List endpoint for interactables implicitly filtered by the authenticated user ID.
@@ -436,6 +445,7 @@ class Fictioneers {
      */
     async getUserInteractables() {
         return this._doFetch({
+            deprecated: true,
             url: "/user-interactables",
         })
     }
@@ -448,6 +458,7 @@ class Fictioneers {
      */
     async getUserInteractable({interactableId}) {
         return this._doFetch({
+            deprecated: true,
             url: `/user-interactables/${interactableId}`,
         })
     }
@@ -461,6 +472,7 @@ class Fictioneers {
      */
     async updateUserInteractable({interactableId, state}) {
         return this._doFetch({
+            deprecated: true,
             url: `/user-interactables/${interactableId}`,
             method: "PATCH",
             body: {
