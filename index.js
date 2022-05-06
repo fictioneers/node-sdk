@@ -122,14 +122,6 @@ class Fictioneers {
     }
 
     async _doFetch({url, method = "GET", auth = "bearer", body = null, additionalHeaders = [], deprecated = false}) {
-        if(deprecated) {
-            return {
-                data: null,
-                error: "This API endpoint has been deprecated.",
-                meta: null,
-                status: 299
-            }
-        }
         let headers
         if(auth == "bearer"){
             headers = await this._getAuthHeadersBearer()
@@ -155,7 +147,12 @@ class Fictioneers {
                 status: 204
             }
         } else {
-            return response.json()
+            let r = response.json()
+            if(deprecated) {
+                r.error = (r.error ? r.error : "") + " Notice: this API endpoint has been deprecated and will be removed in a future version of this SDK."
+            }
+            console.log("response error:", r.error)
+            return r
         }
     }
 
@@ -334,6 +331,37 @@ class Fictioneers {
                 "pause_at_beats": pauseAtBeats
             }
         })
+    }
+
+    /** Shortcut / combined method to initialise a new user and progress them */
+    async initialiseAndProgressUser({timelineId, disableTimeGuards = false, pauseAtBeats = false, maxSteps = null}) {
+        // first get or create the user, and get their story state
+        let userStoryState;
+        const getUserResponse = await this.getUser({})
+        if(getUserResponse.data == null) {
+            const createUserResponse = await this.createUser({timelineId, disableTimeGuards, pauseAtBeats})
+            userStoryState = createUserResponse.data.narrative_state
+        } else {
+            const getUserStoryStateResponse = await this.getUserStoryState()
+            userStoryState = getUserStoryStateResponse.data
+        }
+        // progress the story state if they have just started:
+        if(userStoryState.current_step == null) {
+            const progressUserStoryStateEventsResponse = await this.progressUserStoryStateEvents({maxSteps, pauseAtBeats})
+            userStoryState = progressUserStoryStateEventsResponse.data
+        }
+        // next get their timeline events
+        const userTimelineEventsResponse = await this.getUserTimelineEvents()
+        const userTimelineEvents = userTimelineEventsResponse.data
+        // next put them on the timeline if not already
+        if(userStoryState.current_timeline_event_id == null){
+            const updateUserStoryStateResponse = await this.updateUserStoryState({currentTimelineEventId: userTimelineEvents[0].id})
+            userStoryState = updateUserStoryStateResponse.data
+        }
+        return {
+            userStoryState: userStoryState,
+            userTimelineEvents: userTimelineEvents
+        }
     }
 
     /* User story state */
