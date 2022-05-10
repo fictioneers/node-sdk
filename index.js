@@ -151,7 +151,6 @@ class Fictioneers {
             if(deprecated) {
                 r.error = (r.error ? r.error : "") + " Notice: this API endpoint has been deprecated and will be removed in a future version of this SDK."
             }
-            console.log("response error:", r.error)
             return r
         }
     }
