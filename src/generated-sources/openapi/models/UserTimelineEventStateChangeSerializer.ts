@@ -13,20 +13,20 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ContentIntegrationSerializer } from './ContentIntegrationSerializer';
 import {
+    ContentIntegrationSerializer,
     ContentIntegrationSerializerFromJSON,
     ContentIntegrationSerializerFromJSONTyped,
     ContentIntegrationSerializerToJSON,
 } from './ContentIntegrationSerializer';
-import type { NarrativeEventType } from './NarrativeEventType';
 import {
+    NarrativeEventType,
     NarrativeEventTypeFromJSON,
     NarrativeEventTypeFromJSONTyped,
     NarrativeEventTypeToJSON,
 } from './NarrativeEventType';
-import type { UserTimelineEventState } from './UserTimelineEventState';
 import {
+    UserTimelineEventState,
     UserTimelineEventStateFromJSON,
     UserTimelineEventStateFromJSONTyped,
     UserTimelineEventStateToJSON,
@@ -98,21 +98,6 @@ export interface UserTimelineEventStateChangeSerializer {
      * @memberof UserTimelineEventStateChangeSerializer
      */
     narrativeEventDescription?: string;
-}
-
-/**
- * Check if a given object implements the UserTimelineEventStateChangeSerializer interface.
- */
-export function instanceOfUserTimelineEventStateChangeSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "state" in value;
-    isInstance = isInstance && "stateChangeContent" in value;
-    isInstance = isInstance && "timelineEventId" in value;
-    isInstance = isInstance && "rowId" in value;
-    isInstance = isInstance && "narrativeEventId" in value;
-    isInstance = isInstance && "narrativeEventType" in value;
-
-    return isInstance;
 }
 
 export function UserTimelineEventStateChangeSerializerFromJSON(json: any): UserTimelineEventStateChangeSerializer {

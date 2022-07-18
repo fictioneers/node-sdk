@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ErrorSerializer } from './ErrorSerializer';
 import {
+    ErrorSerializer,
     ErrorSerializerFromJSON,
     ErrorSerializerFromJSONTyped,
     ErrorSerializerToJSON,
@@ -38,15 +38,6 @@ export interface ModelError {
      * @memberof ModelError
      */
     content?: Array<object>;
-}
-
-/**
- * Check if a given object implements the ModelError interface.
- */
-export function instanceOfModelError(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ModelErrorFromJSON(json: any): ModelError {

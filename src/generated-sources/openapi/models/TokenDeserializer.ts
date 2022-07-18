@@ -27,16 +27,6 @@ export interface TokenDeserializer {
     userId: string;
 }
 
-/**
- * Check if a given object implements the TokenDeserializer interface.
- */
-export function instanceOfTokenDeserializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "userId" in value;
-
-    return isInstance;
-}
-
 export function TokenDeserializerFromJSON(json: any): TokenDeserializer {
     return TokenDeserializerFromJSONTyped(json, false);
 }

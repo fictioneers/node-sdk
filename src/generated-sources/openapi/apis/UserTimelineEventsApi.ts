@@ -14,19 +14,17 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  HTTPValidationError,
-  PatchUserTimelineEventDeserializer,
-  ResponseListSerializerUserTimelineEventSerializer,
-  ResponseSerializerUserTimelineEventSerializer,
-} from '../models';
 import {
+    HTTPValidationError,
     HTTPValidationErrorFromJSON,
     HTTPValidationErrorToJSON,
+    PatchUserTimelineEventDeserializer,
     PatchUserTimelineEventDeserializerFromJSON,
     PatchUserTimelineEventDeserializerToJSON,
+    ResponseListSerializerUserTimelineEventSerializer,
     ResponseListSerializerUserTimelineEventSerializerFromJSON,
     ResponseListSerializerUserTimelineEventSerializerToJSON,
+    ResponseSerializerUserTimelineEventSerializer,
     ResponseSerializerUserTimelineEventSerializerFromJSON,
     ResponseSerializerUserTimelineEventSerializerToJSON,
 } from '../models';
@@ -45,7 +43,7 @@ export class UserTimelineEventsApi extends runtime.BaseAPI {
      * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
      * Lists all timeline events for user.
      */
-    async listTimelineEventsForUserV1UserTimelineEventsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseListSerializerUserTimelineEventSerializer>> {
+    async listTimelineEventsForUserV1UserTimelineEventsGetRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseListSerializerUserTimelineEventSerializer>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -72,7 +70,7 @@ export class UserTimelineEventsApi extends runtime.BaseAPI {
      * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
      * Lists all timeline events for user.
      */
-    async listTimelineEventsForUserV1UserTimelineEventsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseListSerializerUserTimelineEventSerializer> {
+    async listTimelineEventsForUserV1UserTimelineEventsGet(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseListSerializerUserTimelineEventSerializer> {
         const response = await this.listTimelineEventsForUserV1UserTimelineEventsGetRaw(initOverrides);
         return await response.value();
     }
@@ -81,7 +79,7 @@ export class UserTimelineEventsApi extends runtime.BaseAPI {
      * Patch endpoint for user timeline events.
      * Update a user timeline event
      */
-    async updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRaw(requestParameters: UpdateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserTimelineEventSerializer>> {
+    async updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRaw(requestParameters: UpdateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserTimelineEventSerializer>> {
         if (requestParameters.timelineEventId === null || requestParameters.timelineEventId === undefined) {
             throw new runtime.RequiredError('timelineEventId','Required parameter requestParameters.timelineEventId was null or undefined when calling updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch.');
         }
@@ -119,7 +117,7 @@ export class UserTimelineEventsApi extends runtime.BaseAPI {
      * Patch endpoint for user timeline events.
      * Update a user timeline event
      */
-    async updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(requestParameters: UpdateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseSerializerUserTimelineEventSerializer> {
+    async updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(requestParameters: UpdateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseSerializerUserTimelineEventSerializer> {
         const response = await this.updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatchRaw(requestParameters, initOverrides);
         return await response.value();
     }

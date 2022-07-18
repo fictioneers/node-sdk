@@ -39,18 +39,6 @@ export interface ContentIntegrationSerializer {
     providerId: string;
 }
 
-/**
- * Check if a given object implements the ContentIntegrationSerializer interface.
- */
-export function instanceOfContentIntegrationSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "contentId" in value;
-    isInstance = isInstance && "contentType" in value;
-    isInstance = isInstance && "providerId" in value;
-
-    return isInstance;
-}
-
 export function ContentIntegrationSerializerFromJSON(json: any): ContentIntegrationSerializer {
     return ContentIntegrationSerializerFromJSONTyped(json, false);
 }

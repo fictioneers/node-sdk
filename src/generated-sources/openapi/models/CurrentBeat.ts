@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { BeatSerializer } from './BeatSerializer';
 import {
+    BeatSerializer,
     BeatSerializerFromJSON,
     BeatSerializerFromJSONTyped,
     BeatSerializerToJSON,
@@ -38,15 +38,6 @@ export interface CurrentBeat {
      * @memberof CurrentBeat
      */
     name?: string;
-}
-
-/**
- * Check if a given object implements the CurrentBeat interface.
- */
-export function instanceOfCurrentBeat(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function CurrentBeatFromJSON(json: any): CurrentBeat {

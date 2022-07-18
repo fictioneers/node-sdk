@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { Meta } from './Meta';
 import {
+    Meta,
     MetaFromJSON,
     MetaFromJSONTyped,
     MetaToJSON,
 } from './Meta';
-import type { UserTimelineEventStateChangeSerializer } from './UserTimelineEventStateChangeSerializer';
 import {
+    UserTimelineEventStateChangeSerializer,
     UserTimelineEventStateChangeSerializerFromJSON,
     UserTimelineEventStateChangeSerializerFromJSONTyped,
     UserTimelineEventStateChangeSerializerToJSON,
@@ -51,15 +51,6 @@ export interface ResponseListSerializerUserTimelineEventStateChangeSerializer {
      * @memberof ResponseListSerializerUserTimelineEventStateChangeSerializer
      */
     meta?: Meta | null;
-}
-
-/**
- * Check if a given object implements the ResponseListSerializerUserTimelineEventStateChangeSerializer interface.
- */
-export function instanceOfResponseListSerializerUserTimelineEventStateChangeSerializer(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ResponseListSerializerUserTimelineEventStateChangeSerializerFromJSON(json: any): ResponseListSerializerUserTimelineEventStateChangeSerializer {

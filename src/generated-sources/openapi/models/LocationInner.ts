@@ -21,15 +21,6 @@ import { exists, mapValues } from '../runtime';
 export interface LocationInner {
 }
 
-/**
- * Check if a given object implements the LocationInner interface.
- */
-export function instanceOfLocationInner(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function LocationInnerFromJSON(json: any): LocationInner {
     return LocationInnerFromJSONTyped(json, false);
 }

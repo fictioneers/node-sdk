@@ -39,16 +39,6 @@ export interface TokenIntrospectionSerializer {
     expiresIn?: number;
 }
 
-/**
- * Check if a given object implements the TokenIntrospectionSerializer interface.
- */
-export function instanceOfTokenIntrospectionSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "isActive" in value;
-
-    return isInstance;
-}
-
 export function TokenIntrospectionSerializerFromJSON(json: any): TokenIntrospectionSerializer {
     return TokenIntrospectionSerializerFromJSONTyped(json, false);
 }

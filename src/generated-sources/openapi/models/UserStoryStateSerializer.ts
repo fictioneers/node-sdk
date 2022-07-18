@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { CurrentBeat } from './CurrentBeat';
 import {
+    CurrentBeat,
     CurrentBeatFromJSON,
     CurrentBeatFromJSONTyped,
     CurrentBeatToJSON,
 } from './CurrentBeat';
-import type { NewBeatAvailable } from './NewBeatAvailable';
 import {
+    NewBeatAvailable,
     NewBeatAvailableFromJSON,
     NewBeatAvailableFromJSONTyped,
     NewBeatAvailableToJSON,
@@ -93,19 +93,6 @@ export interface UserStoryStateSerializer {
      * @memberof UserStoryStateSerializer
      */
     activeTimelineId: string;
-}
-
-/**
- * Check if a given object implements the UserStoryStateSerializer interface.
- */
-export function instanceOfUserStoryStateSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "endOfTimelineReached" in value;
-    isInstance = isInstance && "datetimeGuardsDisabled" in value;
-    isInstance = isInstance && "pauseAtBeats" in value;
-    isInstance = isInstance && "activeTimelineId" in value;
-
-    return isInstance;
 }
 
 export function UserStoryStateSerializerFromJSON(json: any): UserStoryStateSerializer {

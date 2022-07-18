@@ -13,26 +13,26 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { MetaSerializer } from './MetaSerializer';
 import {
+    MetaSerializer,
     MetaSerializerFromJSON,
     MetaSerializerFromJSONTyped,
     MetaSerializerToJSON,
 } from './MetaSerializer';
-import type { ServiceStatus } from './ServiceStatus';
 import {
+    ServiceStatus,
     ServiceStatusFromJSON,
     ServiceStatusFromJSONTyped,
     ServiceStatusToJSON,
 } from './ServiceStatus';
-import type { UserTimelineEventSerializer } from './UserTimelineEventSerializer';
 import {
+    UserTimelineEventSerializer,
     UserTimelineEventSerializerFromJSON,
     UserTimelineEventSerializerFromJSONTyped,
     UserTimelineEventSerializerToJSON,
 } from './UserTimelineEventSerializer';
-import type { UserTimelineEventStateChangeSerializer } from './UserTimelineEventStateChangeSerializer';
 import {
+    UserTimelineEventStateChangeSerializer,
     UserTimelineEventStateChangeSerializerFromJSON,
     UserTimelineEventStateChangeSerializerFromJSONTyped,
     UserTimelineEventStateChangeSerializerToJSON,
@@ -62,15 +62,6 @@ export interface Meta {
      * @memberof Meta
      */
     serviceStatus?: ServiceStatus | null;
-}
-
-/**
- * Check if a given object implements the Meta interface.
- */
-export function instanceOfMeta(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function MetaFromJSON(json: any): Meta {

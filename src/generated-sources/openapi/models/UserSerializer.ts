@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { EmbeddedRepresentationOfUserStoryState } from './EmbeddedRepresentationOfUserStoryState';
 import {
+    EmbeddedRepresentationOfUserStoryState,
     EmbeddedRepresentationOfUserStoryStateFromJSON,
     EmbeddedRepresentationOfUserStoryStateFromJSONTyped,
     EmbeddedRepresentationOfUserStoryStateToJSON,
@@ -39,16 +39,6 @@ export interface UserSerializer {
      * @memberof UserSerializer
      */
     narrativeState?: EmbeddedRepresentationOfUserStoryState | null;
-}
-
-/**
- * Check if a given object implements the UserSerializer interface.
- */
-export function instanceOfUserSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-
-    return isInstance;
 }
 
 export function UserSerializerFromJSON(json: any): UserSerializer {

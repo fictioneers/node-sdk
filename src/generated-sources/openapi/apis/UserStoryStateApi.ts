@@ -14,19 +14,17 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  HTTPValidationError,
-  PatchStoryStateDeserializer,
-  ProgressEventsDeserializer,
-  ResponseSerializerUserStoryStateSerializer,
-} from '../models';
 import {
+    HTTPValidationError,
     HTTPValidationErrorFromJSON,
     HTTPValidationErrorToJSON,
+    PatchStoryStateDeserializer,
     PatchStoryStateDeserializerFromJSON,
     PatchStoryStateDeserializerToJSON,
+    ProgressEventsDeserializer,
     ProgressEventsDeserializerFromJSON,
     ProgressEventsDeserializerToJSON,
+    ResponseSerializerUserStoryStateSerializer,
     ResponseSerializerUserStoryStateSerializerFromJSON,
     ResponseSerializerUserStoryStateSerializerToJSON,
 } from '../models';
@@ -48,7 +46,7 @@ export class UserStoryStateApi extends runtime.BaseAPI {
      * Representation of authenticated users narrative story state.
      * Retrieves user narrative state
      */
-    async getUserStoryStateV1UserStoryStateGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserStoryStateSerializer>> {
+    async getUserStoryStateV1UserStoryStateGetRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserStoryStateSerializer>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -75,7 +73,7 @@ export class UserStoryStateApi extends runtime.BaseAPI {
      * Representation of authenticated users narrative story state.
      * Retrieves user narrative state
      */
-    async getUserStoryStateV1UserStoryStateGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseSerializerUserStoryStateSerializer> {
+    async getUserStoryStateV1UserStoryStateGet(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseSerializerUserStoryStateSerializer> {
         const response = await this.getUserStoryStateV1UserStoryStateGetRaw(initOverrides);
         return await response.value();
     }
@@ -84,7 +82,7 @@ export class UserStoryStateApi extends runtime.BaseAPI {
      * Updates the current timeline event ID for the user, adding the previous value to the history.
      * Updates the current timeline event ID for the user
      */
-    async patchUserStoryStateV1UserStoryStatePatchRaw(requestParameters: PatchUserStoryStateV1UserStoryStatePatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserStoryStateSerializer>> {
+    async patchUserStoryStateV1UserStoryStatePatchRaw(requestParameters: PatchUserStoryStateV1UserStoryStatePatchRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserStoryStateSerializer>> {
         if (requestParameters.patchStoryStateDeserializer === null || requestParameters.patchStoryStateDeserializer === undefined) {
             throw new runtime.RequiredError('patchStoryStateDeserializer','Required parameter requestParameters.patchStoryStateDeserializer was null or undefined when calling patchUserStoryStateV1UserStoryStatePatch.');
         }
@@ -118,7 +116,7 @@ export class UserStoryStateApi extends runtime.BaseAPI {
      * Updates the current timeline event ID for the user, adding the previous value to the history.
      * Updates the current timeline event ID for the user
      */
-    async patchUserStoryStateV1UserStoryStatePatch(requestParameters: PatchUserStoryStateV1UserStoryStatePatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseSerializerUserStoryStateSerializer> {
+    async patchUserStoryStateV1UserStoryStatePatch(requestParameters: PatchUserStoryStateV1UserStoryStatePatchRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseSerializerUserStoryStateSerializer> {
         const response = await this.patchUserStoryStateV1UserStoryStatePatchRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -127,7 +125,7 @@ export class UserStoryStateApi extends runtime.BaseAPI {
      * Progress events based on the authenticated user available transition events.
      * Progress timeline events
      */
-    async stepEventsForUserViaPostV1UserStoryStateProgressEventsPostRaw(requestParameters: StepEventsForUserViaPostV1UserStoryStateProgressEventsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserStoryStateSerializer>> {
+    async stepEventsForUserViaPostV1UserStoryStateProgressEventsPostRaw(requestParameters: StepEventsForUserViaPostV1UserStoryStateProgressEventsPostRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserStoryStateSerializer>> {
         if (requestParameters.progressEventsDeserializer === null || requestParameters.progressEventsDeserializer === undefined) {
             throw new runtime.RequiredError('progressEventsDeserializer','Required parameter requestParameters.progressEventsDeserializer was null or undefined when calling stepEventsForUserViaPostV1UserStoryStateProgressEventsPost.');
         }
@@ -161,7 +159,7 @@ export class UserStoryStateApi extends runtime.BaseAPI {
      * Progress events based on the authenticated user available transition events.
      * Progress timeline events
      */
-    async stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(requestParameters: StepEventsForUserViaPostV1UserStoryStateProgressEventsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseSerializerUserStoryStateSerializer> {
+    async stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(requestParameters: StepEventsForUserViaPostV1UserStoryStateProgressEventsPostRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseSerializerUserStoryStateSerializer> {
         const response = await this.stepEventsForUserViaPostV1UserStoryStateProgressEventsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }

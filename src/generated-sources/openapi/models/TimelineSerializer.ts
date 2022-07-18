@@ -39,17 +39,6 @@ export interface TimelineSerializer {
     description?: string;
 }
 
-/**
- * Check if a given object implements the TimelineSerializer interface.
- */
-export function instanceOfTimelineSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "title" in value;
-
-    return isInstance;
-}
-
 export function TimelineSerializerFromJSON(json: any): TimelineSerializer {
     return TimelineSerializerFromJSONTyped(json, false);
 }

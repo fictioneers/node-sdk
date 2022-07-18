@@ -40,15 +40,6 @@ export interface ProgressEventsDeserializer {
     pauseAtBeats?: boolean;
 }
 
-/**
- * Check if a given object implements the ProgressEventsDeserializer interface.
- */
-export function instanceOfProgressEventsDeserializer(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function ProgressEventsDeserializerFromJSON(json: any): ProgressEventsDeserializer {
     return ProgressEventsDeserializerFromJSONTyped(json, false);
 }

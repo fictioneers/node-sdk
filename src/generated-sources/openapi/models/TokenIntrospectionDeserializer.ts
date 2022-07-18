@@ -38,16 +38,6 @@ export interface TokenIntrospectionDeserializer {
     accessToken: string;
 }
 
-/**
- * Check if a given object implements the TokenIntrospectionDeserializer interface.
- */
-export function instanceOfTokenIntrospectionDeserializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "accessToken" in value;
-
-    return isInstance;
-}
-
 export function TokenIntrospectionDeserializerFromJSON(json: any): TokenIntrospectionDeserializer {
     return TokenIntrospectionDeserializerFromJSONTyped(json, false);
 }

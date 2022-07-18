@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { NarrativeEventType } from './NarrativeEventType';
 import {
+    NarrativeEventType,
     NarrativeEventTypeFromJSON,
     NarrativeEventTypeFromJSONTyped,
     NarrativeEventTypeToJSON,
@@ -104,26 +104,6 @@ export interface EventStateChangeSerializer {
      * @memberof EventStateChangeSerializer
      */
     createdAt: Date;
-}
-
-/**
- * Check if a given object implements the EventStateChangeSerializer interface.
- */
-export function instanceOfEventStateChangeSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "escType" in value;
-    isInstance = isInstance && "narrativeEventId" in value;
-    isInstance = isInstance && "timelineEventId" in value;
-    isInstance = isInstance && "eventType" in value;
-    isInstance = isInstance && "availableStepIndex" in value;
-    isInstance = isInstance && "processedStepIndex" in value;
-    isInstance = isInstance && "workspaceId" in value;
-    isInstance = isInstance && "projectId" in value;
-    isInstance = isInstance && "timelineId" in value;
-    isInstance = isInstance && "userId" in value;
-    isInstance = isInstance && "createdAt" in value;
-
-    return isInstance;
 }
 
 export function EventStateChangeSerializerFromJSON(json: any): EventStateChangeSerializer {

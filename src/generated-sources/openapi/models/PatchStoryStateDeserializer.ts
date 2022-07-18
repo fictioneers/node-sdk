@@ -27,16 +27,6 @@ export interface PatchStoryStateDeserializer {
     currentTimelineEventId: string;
 }
 
-/**
- * Check if a given object implements the PatchStoryStateDeserializer interface.
- */
-export function instanceOfPatchStoryStateDeserializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "currentTimelineEventId" in value;
-
-    return isInstance;
-}
-
 export function PatchStoryStateDeserializerFromJSON(json: any): PatchStoryStateDeserializer {
     return PatchStoryStateDeserializerFromJSONTyped(json, false);
 }

@@ -38,15 +38,6 @@ export interface ErrorSerializer {
     content?: Array<object>;
 }
 
-/**
- * Check if a given object implements the ErrorSerializer interface.
- */
-export function instanceOfErrorSerializer(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function ErrorSerializerFromJSON(json: any): ErrorSerializer {
     return ErrorSerializerFromJSONTyped(json, false);
 }

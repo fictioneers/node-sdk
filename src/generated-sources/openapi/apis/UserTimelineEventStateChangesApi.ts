@@ -14,13 +14,11 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  HTTPValidationError,
-  ResponseListSerializerUserTimelineEventStateChangeSerializer,
-} from '../models';
 import {
+    HTTPValidationError,
     HTTPValidationErrorFromJSON,
     HTTPValidationErrorToJSON,
+    ResponseListSerializerUserTimelineEventStateChangeSerializer,
     ResponseListSerializerUserTimelineEventStateChangeSerializerFromJSON,
     ResponseListSerializerUserTimelineEventStateChangeSerializerToJSON,
 } from '../models';
@@ -38,7 +36,7 @@ export class UserTimelineEventStateChangesApi extends runtime.BaseAPI {
      * List endpoint for user timeline event state changes implicitly filtered by the authenticated user ID.
      * Lists all user timeline event state changes
      */
-    async getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRaw(requestParameters: GetUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseListSerializerUserTimelineEventStateChangeSerializer>> {
+    async getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRaw(requestParameters: GetUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseListSerializerUserTimelineEventStateChangeSerializer>> {
         const queryParameters: any = {};
 
         if (requestParameters.contentType !== undefined) {
@@ -69,7 +67,7 @@ export class UserTimelineEventStateChangesApi extends runtime.BaseAPI {
      * List endpoint for user timeline event state changes implicitly filtered by the authenticated user ID.
      * Lists all user timeline event state changes
      */
-    async getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(requestParameters: GetUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseListSerializerUserTimelineEventStateChangeSerializer> {
+    async getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(requestParameters: GetUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseListSerializerUserTimelineEventStateChangeSerializer> {
         const response = await this.getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

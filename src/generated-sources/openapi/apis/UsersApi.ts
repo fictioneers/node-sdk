@@ -14,16 +14,14 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  CreateUserDeserializer,
-  HTTPValidationError,
-  ResponseSerializerUserSerializer,
-} from '../models';
 import {
+    CreateUserDeserializer,
     CreateUserDeserializerFromJSON,
     CreateUserDeserializerToJSON,
+    HTTPValidationError,
     HTTPValidationErrorFromJSON,
     HTTPValidationErrorToJSON,
+    ResponseSerializerUserSerializer,
     ResponseSerializerUserSerializerFromJSON,
     ResponseSerializerUserSerializerToJSON,
 } from '../models';
@@ -41,7 +39,7 @@ export class UsersApi extends runtime.BaseAPI {
      * Create a new audience user for a Fictioneers powered experience.
      * Create new audience user
      */
-    async createUserV1UsersPostRaw(requestParameters: CreateUserV1UsersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserSerializer>> {
+    async createUserV1UsersPostRaw(requestParameters: CreateUserV1UsersPostRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserSerializer>> {
         if (requestParameters.createUserDeserializer === null || requestParameters.createUserDeserializer === undefined) {
             throw new runtime.RequiredError('createUserDeserializer','Required parameter requestParameters.createUserDeserializer was null or undefined when calling createUserV1UsersPost.');
         }
@@ -75,7 +73,7 @@ export class UsersApi extends runtime.BaseAPI {
      * Create a new audience user for a Fictioneers powered experience.
      * Create new audience user
      */
-    async createUserV1UsersPost(requestParameters: CreateUserV1UsersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseSerializerUserSerializer> {
+    async createUserV1UsersPost(requestParameters: CreateUserV1UsersPostRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseSerializerUserSerializer> {
         const response = await this.createUserV1UsersPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -84,7 +82,7 @@ export class UsersApi extends runtime.BaseAPI {
      * Delete the user and any user associated objects from the current timeline.
      * Delete current user
      */
-    async deleteUserV1UsersMeDeleteRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteUserV1UsersMeDeleteRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -111,7 +109,7 @@ export class UsersApi extends runtime.BaseAPI {
      * Delete the user and any user associated objects from the current timeline.
      * Delete current user
      */
-    async deleteUserV1UsersMeDelete(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+    async deleteUserV1UsersMeDelete(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<void> {
         await this.deleteUserV1UsersMeDeleteRaw(initOverrides);
     }
 
@@ -119,7 +117,7 @@ export class UsersApi extends runtime.BaseAPI {
      * Retrieve detailed representation of the current user (and user story state).
      * Retrieve current user
      */
-    async getUserMeV1UsersMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserSerializer>> {
+    async getUserMeV1UsersMeGetRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ResponseSerializerUserSerializer>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -146,7 +144,7 @@ export class UsersApi extends runtime.BaseAPI {
      * Retrieve detailed representation of the current user (and user story state).
      * Retrieve current user
      */
-    async getUserMeV1UsersMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ResponseSerializerUserSerializer> {
+    async getUserMeV1UsersMeGet(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ResponseSerializerUserSerializer> {
         const response = await this.getUserMeV1UsersMeGetRaw(initOverrides);
         return await response.value();
     }

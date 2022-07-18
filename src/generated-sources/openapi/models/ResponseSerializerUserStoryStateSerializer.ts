@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { Meta } from './Meta';
 import {
+    Meta,
     MetaFromJSON,
     MetaFromJSONTyped,
     MetaToJSON,
 } from './Meta';
-import type { UserStoryStateSerializer } from './UserStoryStateSerializer';
 import {
+    UserStoryStateSerializer,
     UserStoryStateSerializerFromJSON,
     UserStoryStateSerializerFromJSONTyped,
     UserStoryStateSerializerToJSON,
@@ -50,15 +50,6 @@ export interface ResponseSerializerUserStoryStateSerializer {
      * @memberof ResponseSerializerUserStoryStateSerializer
      */
     meta?: Meta | null;
-}
-
-/**
- * Check if a given object implements the ResponseSerializerUserStoryStateSerializer interface.
- */
-export function instanceOfResponseSerializerUserStoryStateSerializer(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ResponseSerializerUserStoryStateSerializerFromJSON(json: any): ResponseSerializerUserStoryStateSerializer {

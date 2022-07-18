@@ -44,17 +44,6 @@ export interface EphemeralTokenSerializer {
     expiresIn: number;
 }
 
-/**
- * Check if a given object implements the EphemeralTokenSerializer interface.
- */
-export function instanceOfEphemeralTokenSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "accessToken" in value;
-    isInstance = isInstance && "expiresIn" in value;
-
-    return isInstance;
-}
-
 export function EphemeralTokenSerializerFromJSON(json: any): EphemeralTokenSerializer {
     return EphemeralTokenSerializerFromJSONTyped(json, false);
 }

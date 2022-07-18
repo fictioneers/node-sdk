@@ -13,20 +13,20 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ServiceStatus } from './ServiceStatus';
 import {
+    ServiceStatus,
     ServiceStatusFromJSON,
     ServiceStatusFromJSONTyped,
     ServiceStatusToJSON,
 } from './ServiceStatus';
-import type { UserTimelineEventSerializer } from './UserTimelineEventSerializer';
 import {
+    UserTimelineEventSerializer,
     UserTimelineEventSerializerFromJSON,
     UserTimelineEventSerializerFromJSONTyped,
     UserTimelineEventSerializerToJSON,
 } from './UserTimelineEventSerializer';
-import type { UserTimelineEventStateChangeSerializer } from './UserTimelineEventStateChangeSerializer';
 import {
+    UserTimelineEventStateChangeSerializer,
     UserTimelineEventStateChangeSerializerFromJSON,
     UserTimelineEventStateChangeSerializerFromJSONTyped,
     UserTimelineEventStateChangeSerializerToJSON,
@@ -61,15 +61,6 @@ export interface MetaSerializer {
      * @memberof MetaSerializer
      */
     serviceStatus?: ServiceStatus | null;
-}
-
-/**
- * Check if a given object implements the MetaSerializer interface.
- */
-export function instanceOfMetaSerializer(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function MetaSerializerFromJSON(json: any): MetaSerializer {

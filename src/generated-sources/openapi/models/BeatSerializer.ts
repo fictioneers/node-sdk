@@ -33,15 +33,6 @@ export interface BeatSerializer {
     name?: string;
 }
 
-/**
- * Check if a given object implements the BeatSerializer interface.
- */
-export function instanceOfBeatSerializer(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function BeatSerializerFromJSON(json: any): BeatSerializer {
     return BeatSerializerFromJSONTyped(json, false);
 }

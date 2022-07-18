@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { UserInvokedTimelineEventState } from './UserInvokedTimelineEventState';
 import {
+    UserInvokedTimelineEventState,
     UserInvokedTimelineEventStateFromJSON,
     UserInvokedTimelineEventStateFromJSONTyped,
     UserInvokedTimelineEventStateToJSON,
@@ -32,16 +32,6 @@ export interface PatchUserTimelineEventDeserializer {
      * @memberof PatchUserTimelineEventDeserializer
      */
     state: UserInvokedTimelineEventState;
-}
-
-/**
- * Check if a given object implements the PatchUserTimelineEventDeserializer interface.
- */
-export function instanceOfPatchUserTimelineEventDeserializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "state" in value;
-
-    return isInstance;
 }
 
 export function PatchUserTimelineEventDeserializerFromJSON(json: any): PatchUserTimelineEventDeserializer {

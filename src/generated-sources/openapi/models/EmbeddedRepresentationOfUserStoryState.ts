@@ -13,20 +13,20 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { CurrentBeat } from './CurrentBeat';
 import {
+    CurrentBeat,
     CurrentBeatFromJSON,
     CurrentBeatFromJSONTyped,
     CurrentBeatToJSON,
 } from './CurrentBeat';
-import type { NewBeatAvailable } from './NewBeatAvailable';
 import {
+    NewBeatAvailable,
     NewBeatAvailableFromJSON,
     NewBeatAvailableFromJSONTyped,
     NewBeatAvailableToJSON,
 } from './NewBeatAvailable';
-import type { UserStoryStateSerializer } from './UserStoryStateSerializer';
 import {
+    UserStoryStateSerializer,
     UserStoryStateSerializerFromJSON,
     UserStoryStateSerializerFromJSONTyped,
     UserStoryStateSerializerToJSON,
@@ -98,19 +98,6 @@ export interface EmbeddedRepresentationOfUserStoryState {
      * @memberof EmbeddedRepresentationOfUserStoryState
      */
     activeTimelineId: string;
-}
-
-/**
- * Check if a given object implements the EmbeddedRepresentationOfUserStoryState interface.
- */
-export function instanceOfEmbeddedRepresentationOfUserStoryState(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "endOfTimelineReached" in value;
-    isInstance = isInstance && "datetimeGuardsDisabled" in value;
-    isInstance = isInstance && "pauseAtBeats" in value;
-    isInstance = isInstance && "activeTimelineId" in value;
-
-    return isInstance;
 }
 
 export function EmbeddedRepresentationOfUserStoryStateFromJSON(json: any): EmbeddedRepresentationOfUserStoryState {

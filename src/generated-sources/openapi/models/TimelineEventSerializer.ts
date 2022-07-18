@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ContentIntegrationSerializer } from './ContentIntegrationSerializer';
 import {
+    ContentIntegrationSerializer,
     ContentIntegrationSerializerFromJSON,
     ContentIntegrationSerializerFromJSONTyped,
     ContentIntegrationSerializerToJSON,
 } from './ContentIntegrationSerializer';
-import type { NarrativeEventType } from './NarrativeEventType';
 import {
+    NarrativeEventType,
     NarrativeEventTypeFromJSON,
     NarrativeEventTypeFromJSONTyped,
     NarrativeEventTypeToJSON,
@@ -80,20 +80,6 @@ export interface TimelineEventSerializer {
      * @memberof TimelineEventSerializer
      */
     narrativeEventCustomData?: { [key: string]: string; };
-}
-
-/**
- * Check if a given object implements the TimelineEventSerializer interface.
- */
-export function instanceOfTimelineEventSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "title" in value;
-    isInstance = isInstance && "type" in value;
-    isInstance = isInstance && "contentIntegrations" in value;
-    isInstance = isInstance && "narrativeEventId" in value;
-
-    return isInstance;
 }
 
 export function TimelineEventSerializerFromJSON(json: any): TimelineEventSerializer {

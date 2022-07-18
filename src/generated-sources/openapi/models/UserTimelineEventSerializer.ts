@@ -13,32 +13,32 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { AvailableBeat } from './AvailableBeat';
 import {
+    AvailableBeat,
     AvailableBeatFromJSON,
     AvailableBeatFromJSONTyped,
     AvailableBeatToJSON,
 } from './AvailableBeat';
-import type { ContentIntegrationSerializer } from './ContentIntegrationSerializer';
 import {
+    ContentIntegrationSerializer,
     ContentIntegrationSerializerFromJSON,
     ContentIntegrationSerializerFromJSONTyped,
     ContentIntegrationSerializerToJSON,
 } from './ContentIntegrationSerializer';
-import type { NarrativeEventType } from './NarrativeEventType';
 import {
+    NarrativeEventType,
     NarrativeEventTypeFromJSON,
     NarrativeEventTypeFromJSONTyped,
     NarrativeEventTypeToJSON,
 } from './NarrativeEventType';
-import type { UserInvokedTimelineEventState } from './UserInvokedTimelineEventState';
 import {
+    UserInvokedTimelineEventState,
     UserInvokedTimelineEventStateFromJSON,
     UserInvokedTimelineEventStateFromJSONTyped,
     UserInvokedTimelineEventStateToJSON,
 } from './UserInvokedTimelineEventState';
-import type { UserTimelineEventState } from './UserTimelineEventState';
 import {
+    UserTimelineEventState,
     UserTimelineEventStateFromJSON,
     UserTimelineEventStateFromJSONTyped,
     UserTimelineEventStateToJSON,
@@ -152,25 +152,6 @@ export interface UserTimelineEventSerializer {
      * @memberof UserTimelineEventSerializer
      */
     narrativeEventCustomData?: { [key: string]: string; };
-}
-
-/**
- * Check if a given object implements the UserTimelineEventSerializer interface.
- */
-export function instanceOfUserTimelineEventSerializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "rowId" in value;
-    isInstance = isInstance && "relatedTimelineEventIds" in value;
-    isInstance = isInstance && "availableStepIndex" in value;
-    isInstance = isInstance && "state" in value;
-    isInstance = isInstance && "availableStates" in value;
-    isInstance = isInstance && "narrativeEventId" in value;
-    isInstance = isInstance && "narrativeEventType" in value;
-    isInstance = isInstance && "narrativeEventContent" in value;
-    isInstance = isInstance && "narrativeEventStateChangesContent" in value;
-
-    return isInstance;
 }
 
 export function UserTimelineEventSerializerFromJSON(json: any): UserTimelineEventSerializer {

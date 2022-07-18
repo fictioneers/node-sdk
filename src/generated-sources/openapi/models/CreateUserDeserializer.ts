@@ -49,17 +49,6 @@ export interface CreateUserDeserializer {
     pauseAtBeats?: boolean;
 }
 
-/**
- * Check if a given object implements the CreateUserDeserializer interface.
- */
-export function instanceOfCreateUserDeserializer(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "publishedTimelineId" in value;
-    isInstance = isInstance && "timezone" in value;
-
-    return isInstance;
-}
-
 export function CreateUserDeserializerFromJSON(json: any): CreateUserDeserializer {
     return CreateUserDeserializerFromJSONTyped(json, false);
 }

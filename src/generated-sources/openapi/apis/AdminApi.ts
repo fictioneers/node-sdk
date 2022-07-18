@@ -14,22 +14,20 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  EventStateChangeSerializer,
-  HTTPValidationError,
-  TimelineEventSerializer,
-  TimelineSerializer,
-  UserSerializer,
-} from '../models';
 import {
+    EventStateChangeSerializer,
     EventStateChangeSerializerFromJSON,
     EventStateChangeSerializerToJSON,
+    HTTPValidationError,
     HTTPValidationErrorFromJSON,
     HTTPValidationErrorToJSON,
+    TimelineEventSerializer,
     TimelineEventSerializerFromJSON,
     TimelineEventSerializerToJSON,
+    TimelineSerializer,
     TimelineSerializerFromJSON,
     TimelineSerializerToJSON,
+    UserSerializer,
     UserSerializerFromJSON,
     UserSerializerToJSON,
 } from '../models';
@@ -73,7 +71,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Delete all users on a timeline.
      * Delete all timeline users
      */
-    async deleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRaw(requestParameters: DeleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRaw(requestParameters: DeleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete.');
         }
@@ -100,7 +98,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Delete all users on a timeline.
      * Delete all timeline users
      */
-    async deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(requestParameters: DeleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+    async deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(requestParameters: DeleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<void> {
         await this.deleteAllTimelineUsersV1TimelinesTimelineIdUsersDeleteRaw(requestParameters, initOverrides);
     }
 
@@ -108,7 +106,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Delete timeline user.
      * Delete timeline user
      */
-    async deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRaw(requestParameters: DeleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRaw(requestParameters: DeleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete.');
         }
@@ -139,7 +137,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Delete timeline user.
      * Delete timeline user
      */
-    async deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(requestParameters: DeleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+    async deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(requestParameters: DeleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<void> {
         await this.deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDeleteRaw(requestParameters, initOverrides);
     }
 
@@ -147,7 +145,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Retrieves timeline user.
      * Retrieves timeline user
      */
-    async getTimelineUserV1TimelinesTimelineIdUsersUserIdGetRaw(requestParameters: GetTimelineUserV1TimelinesTimelineIdUsersUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSerializer>> {
+    async getTimelineUserV1TimelinesTimelineIdUsersUserIdGetRaw(requestParameters: GetTimelineUserV1TimelinesTimelineIdUsersUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<UserSerializer>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling getTimelineUserV1TimelinesTimelineIdUsersUserIdGet.');
         }
@@ -178,7 +176,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Retrieves timeline user.
      * Retrieves timeline user
      */
-    async getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(requestParameters: GetTimelineUserV1TimelinesTimelineIdUsersUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSerializer> {
+    async getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(requestParameters: GetTimelineUserV1TimelinesTimelineIdUsersUserIdGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<UserSerializer> {
         const response = await this.getTimelineUserV1TimelinesTimelineIdUsersUserIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -187,7 +185,7 @@ export class AdminApi extends runtime.BaseAPI {
      * List of all users on timeline.
      * List all timeline users
      */
-    async getTimelineUsersV1TimelinesTimelineIdUsersGetRaw(requestParameters: GetTimelineUsersV1TimelinesTimelineIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserSerializer>>> {
+    async getTimelineUsersV1TimelinesTimelineIdUsersGetRaw(requestParameters: GetTimelineUsersV1TimelinesTimelineIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<Array<UserSerializer>>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling getTimelineUsersV1TimelinesTimelineIdUsersGet.');
         }
@@ -214,7 +212,7 @@ export class AdminApi extends runtime.BaseAPI {
      * List of all users on timeline.
      * List all timeline users
      */
-    async getTimelineUsersV1TimelinesTimelineIdUsersGet(requestParameters: GetTimelineUsersV1TimelinesTimelineIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSerializer>> {
+    async getTimelineUsersV1TimelinesTimelineIdUsersGet(requestParameters: GetTimelineUsersV1TimelinesTimelineIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<Array<UserSerializer>> {
         const response = await this.getTimelineUsersV1TimelinesTimelineIdUsersGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -223,7 +221,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Representation of a single timeline.
      * Retrieves timeline
      */
-    async getTimelineV1TimelinesTimelineIdGetRaw(requestParameters: GetTimelineV1TimelinesTimelineIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimelineSerializer>> {
+    async getTimelineV1TimelinesTimelineIdGetRaw(requestParameters: GetTimelineV1TimelinesTimelineIdGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<TimelineSerializer>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling getTimelineV1TimelinesTimelineIdGet.');
         }
@@ -250,7 +248,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Representation of a single timeline.
      * Retrieves timeline
      */
-    async getTimelineV1TimelinesTimelineIdGet(requestParameters: GetTimelineV1TimelinesTimelineIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimelineSerializer> {
+    async getTimelineV1TimelinesTimelineIdGet(requestParameters: GetTimelineV1TimelinesTimelineIdGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<TimelineSerializer> {
         const response = await this.getTimelineV1TimelinesTimelineIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -259,7 +257,7 @@ export class AdminApi extends runtime.BaseAPI {
      * List all published timelines which users can be placed on.
      * List all published timelines
      */
-    async getTimelinesV1TimelinesGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<TimelineSerializer>>> {
+    async getTimelinesV1TimelinesGetRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<Array<TimelineSerializer>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -282,7 +280,7 @@ export class AdminApi extends runtime.BaseAPI {
      * List all published timelines which users can be placed on.
      * List all published timelines
      */
-    async getTimelinesV1TimelinesGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TimelineSerializer>> {
+    async getTimelinesV1TimelinesGet(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<Array<TimelineSerializer>> {
         const response = await this.getTimelinesV1TimelinesGetRaw(initOverrides);
         return await response.value();
     }
@@ -291,7 +289,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Returns all event state changes filtered by timeline.
      * List all event state changes for timeline.
      */
-    async listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRaw(requestParameters: ListAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<EventStateChangeSerializer>>> {
+    async listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRaw(requestParameters: ListAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<Array<EventStateChangeSerializer>>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet.');
         }
@@ -318,7 +316,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Returns all event state changes filtered by timeline.
      * List all event state changes for timeline.
      */
-    async listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(requestParameters: ListAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<EventStateChangeSerializer>> {
+    async listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(requestParameters: ListAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<Array<EventStateChangeSerializer>> {
         const response = await this.listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -327,7 +325,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Lists all timeline events on a specific timeline.
      * Lists all timeline events
      */
-    async listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRaw(requestParameters: ListTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<TimelineEventSerializer>>> {
+    async listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRaw(requestParameters: ListTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<Array<TimelineEventSerializer>>> {
         if (requestParameters.timelineId === null || requestParameters.timelineId === undefined) {
             throw new runtime.RequiredError('timelineId','Required parameter requestParameters.timelineId was null or undefined when calling listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet.');
         }
@@ -354,7 +352,7 @@ export class AdminApi extends runtime.BaseAPI {
      * Lists all timeline events on a specific timeline.
      * Lists all timeline events
      */
-    async listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(requestParameters: ListTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TimelineEventSerializer>> {
+    async listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(requestParameters: ListTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<Array<TimelineEventSerializer>> {
         const response = await this.listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
