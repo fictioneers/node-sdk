@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "codegen": "rm -rf src/generated-sources/openapi; openapi-generator-cli version-manager set 6.0.0; openapi-generator-cli generate -g typescript-fetch -i https://api.fictioneers.co.uk/_docs/openapi -o src/generated-sources/openapi --skip-validate-spec --additional-properties=supportsES6=true,npmVersion=8.10.0,typescriptThreePlus=true",
-    "start": "npm run build && node index.js",
+    "codegen": "rm -rf src/generated-sources/openapi; openapi-generator-cli version-manager set 6.0.0; openapi-generator-cli generate -g typescript-axios -i https://api.fictioneers.co.uk/_docs/openapi -o src/generated-sources/openapi --skip-validate-spec --additional-properties=supportsES6=true,npmVersion=8.10.0,typescriptThreePlus=true",
+    "start": "npm run build && node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/fictioneers/node-sdk#readme",
   "dependencies": {
+    "axios": "^0.27.2",
     "node-fetch": "^3.2.1",
     "typescript": "^4.7.4",
     "uuid": "^8.3.2"
