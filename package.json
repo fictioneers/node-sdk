@@ -7,7 +7,7 @@
     "build": "tsc --project tsconfig.json",
     "codegen": "rm -rf src/generated-sources/openapi; openapi-generator-cli version-manager set 6.0.0; openapi-generator-cli generate -g typescript-axios -i https://api.fictioneers.co.uk/_docs/openapi -o src/generated-sources/openapi --skip-validate-spec --additional-properties=supportsES6=true,npmVersion=8.10.0,typescriptThreePlus=true",
     "start": "npm run build && node dist/test.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,14 +22,26 @@
   "homepage": "https://github.com/fictioneers/node-sdk#readme",
   "dependencies": {
     "axios": "^0.27.2",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^26.8.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "node-fetch": "^3.2.1",
+    "prettier": "^2.7.1",
     "typescript": "^4.7.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1",
+    "@types/jest": "^28.1.6",
     "@types/node": "^18.0.6",
     "@types/uuid": "^8.3.4",
-    "dotenv": "^16.0.1"
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.21.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^28.1.3"
   }
 }

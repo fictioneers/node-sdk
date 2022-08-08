@@ -1,4 +1,5 @@
 # Fictioneers API: Node SDK
+
 This is a simple SDK for use when connecting to the Fictioneers API from the server-side.
 
 To use, you require your Fictioneers secret key, and optionally, a user ID. If you do not provide a user ID, and the API call requires one, the SDK will create one for you, which you can retrieve either from the API response or from the SDK with `getUserId()`.
@@ -22,13 +23,13 @@ The following methods are provided in addition to the methods that map to the Fi
 
 These methods map to the corresponding methods in the API:
 
-## Auth ##
+## Auth
 
 The method `getAccessToken()` is used internally by the SDK, so you shouldn't need to use it, but calling it will return the access token used by the SDK to call the API.
 
 The method `setAccessToken()` will both call `getAccessToken()` to generate a new access token and reset the access token within the SDK, if the SDK's current access token is either not present or has expired. Again, you shouldn't normally need to use this method.
 
-## Admin ##
+## Admin
 
 Admin service to programatically manage timelines and timeline users. A secret API Key is required in the HTTP Authorization header.
 
@@ -40,7 +41,7 @@ Admin service to programatically manage timelines and timeline users. A secret A
 - `deleteTimelineUser({timelineId, userId = null})` => `DELETE /timelines/${timelineId}/users/${userId}`
 - `getTimelineEventStateChanges({timelineId})` => `GET /timelines/${timelineId}/event-state-changes/`
 
-## Users ##
+## Users
 
 User from the authentication token.
 
@@ -49,7 +50,7 @@ User from the authentication token.
 - `updateUser({displayName})` => `PATCH /users/me`
 - `createUser({timelineId, disableTimeGuards = false, pauseAtBeats = false})` => `POST /users`
 
-## User story state ##
+## User story state
 
 Methods relating to the user's story state
 
@@ -57,20 +58,20 @@ Methods relating to the user's story state
 - `updateUserStoryState({currentTimelineEventId})` => `PATCH /user-story-state`
 - `progressUserStoryStateEvents({maxSteps = null, pauseAtBeats = true})` => `POST /user-story-state/progress-events`
 
-## User timeline events ##
+## User timeline events
 
 Methods relating to timeline events, as distinct from hooks.
 
 - `getUserTimelineEvents()` => `GET /user-timeline-events`
 - `updateUserTimelineEvent({timelineEventId, state})` => `PATCH /user-timeline-events/${timelineEventId}`
 
-## User timeline hooks ##
+## User timeline hooks
 
 Timeline hooks for the authenticated user.
 
 - `getUserTimelineHooks()` => `GET /user-timeline-hooks`
 
-## User interactables ##
+## User interactables
 
 Interactables for the authenticated user.
 
@@ -78,14 +79,14 @@ Interactables for the authenticated user.
 - `getUserInteractable({interactableId}) ` => `GET /user-interactables/${interactableId}`
 - `updateUserInteractable({interactableId, state})` => `PATCH /user-interactables/${interactableId}`
 
-##  Timeline interactables ##
+## Timeline interactables
 
 All the interactables referenced on the users current timeline (irrespective of their current position).
 
 - `getTimelineInteractables()` => `GET /timeline-interactables`
 - `getTimelineInteractable({interactableId})` => `GET /timeline-interactables/${interactableId}`
 
-## Timeline events ##
+## Timeline events
 
 All the events referenced on the users current timeline (irrespective of their current posiiton).
 
