@@ -20,7 +20,7 @@ export default class Fictioneers {
 
   accessToken: null | string
 
-  accessTokenExpiry: null | string
+  accessTokenExpiry: null | number
 
   authApi: AuthApi
 
@@ -35,16 +35,12 @@ export default class Fictioneers {
       )
     }
 
-    if (!userId) {
-      userId = uuidv4()
-    }
-
     const configuration = new Configuration({
       apiKey: apiSecretKey,
       basePath,
     })
 
-    this.userId = userId
+    this.userId = userId || uuidv4()
     this.accessToken = null
     this.accessTokenExpiry = null
     this.authApi = new AuthApi(configuration)
@@ -53,20 +49,22 @@ export default class Fictioneers {
   /**
    * Generate and save a new ID Token which can be used to authenticate against the Audience APIs.
    */
-  async getAccessToken(): Promise<TokenResponse['access_token'] | undefined> {
+  async getAccessToken(): Promise<TokenResponse | undefined> {
     let response
     try {
       response = await this.authApi.generateTokensV1AuthTokenPost({
         user_id: this.userId,
       })
     } catch (err: unknown) {
-      this.handleError(err)
-      return
+      Fictioneers.handleError(err)
+      return undefined
     }
-    return response.data.access_token
+    this.accessToken = response.data.access_token
+    this.accessTokenExpiry = response.data.expires_in
+    return response.data
   }
 
-  handleError(err: unknown) {
+  static handleError(err: unknown) {
     if (!axios.isAxiosError(err)) {
       console.log(err)
       return
@@ -75,14 +73,14 @@ export default class Fictioneers {
       GeneralError | HTTPValidationError | ModelError
     >
 
-    if (axiosError.response?.data && 'content' in axiosError.response?.data) {
+    if (axiosError.response?.data && 'content' in axiosError.response.data) {
       axiosError.response?.data.content?.map((e) => e).join('\n')
     }
     if (axiosError.response?.data) {
       console.log(axiosError.response?.data)
     }
     if (axiosError.response?.data.detail) {
-      const { detail } = axiosError.response?.data
+      const { detail } = axiosError.response.data
       console.log(detail)
       if (typeof detail === 'string') {
         console.log(detail)

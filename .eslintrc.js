@@ -16,7 +16,13 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint', 'jest'],
-  rules: {},
+  rules: {
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      { js: 'never', jsx: 'never', ts: 'never', tsx: 'never' },
+    ],
+  },
   ignorePatterns: ['dist', 'src/generated-sources', 'index.js'],
   overrides: [
     {
