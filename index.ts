@@ -3,10 +3,10 @@ import { v4 as uuidv4 } from "uuid";
 import {
   AuthApi,
   Configuration,
-  EphemeralTokenSerializer,
-  ErrorSerializer,
+  GeneralError,
   HTTPValidationError,
   ModelError,
+  TokenResponse,
 } from "./src/generated-sources/openapi";
 
 export interface Props {
@@ -50,9 +50,7 @@ export default class Fictioneers {
   /**
    * Generate and save a new ID Token which can be used to authenticate against the Audience APIs.
    */
-  async getAccessToken(): Promise<
-    EphemeralTokenSerializer["access_token"] | undefined
-  > {
+  async getAccessToken(): Promise<TokenResponse["access_token"] | undefined> {
     let response;
     try {
       response = await this.authApi.generateTokensV1AuthTokenPost({
@@ -71,7 +69,7 @@ export default class Fictioneers {
       return;
     }
     const axiosError = err as AxiosError<
-      ErrorSerializer | HTTPValidationError | ModelError
+      GeneralError | HTTPValidationError | ModelError
     >;
 
     if (axiosError.response?.data && "content" in axiosError.response?.data) {

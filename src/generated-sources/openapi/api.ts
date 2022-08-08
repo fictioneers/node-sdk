@@ -43,77 +43,77 @@ export interface AvailableBeat {
 /**
  * Represents a beat object on a narrative timeline.
  * @export
- * @interface BeatSerializer
+ * @interface Beat
  */
-export interface BeatSerializer {
-    /**
-     * ID of the beat.
-     * @type {string}
-     * @memberof BeatSerializer
-     */
-    'id'?: string;
-    /**
-     * Name of the beat.
-     * @type {string}
-     * @memberof BeatSerializer
-     */
-    'name'?: string;
+export interface Beat {
+  /**
+   * ID of the beat.
+   * @type {string}
+   * @memberof Beat
+   */
+  id?: string;
+  /**
+   * Name of the beat.
+   * @type {string}
+   * @memberof Beat
+   */
+  name?: string;
 }
 /**
  * Represents content referenced in an external data source to an event state.
  * @export
- * @interface ContentIntegrationSerializer
+ * @interface ContentIntegration
  */
-export interface ContentIntegrationSerializer {
-    /**
-     * 
-     * @type {string}
-     * @memberof ContentIntegrationSerializer
-     */
-    'content_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContentIntegrationSerializer
-     */
-    'content_type': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ContentIntegrationSerializer
-     */
-    'provider_id': string;
+export interface ContentIntegration {
+  /**
+   *
+   * @type {string}
+   * @memberof ContentIntegration
+   */
+  content_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContentIntegration
+   */
+  content_type: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContentIntegration
+   */
+  provider_id: string;
 }
 /**
  * Used when creating a new user entity.  The timeline ID and timezone is explicitly provided by the client - while the user email address and other mandatory fields are extracted from the verified JWT token sent in the authorization header.
  * @export
- * @interface CreateUserDeserializer
+ * @interface CreateUserRequest
  */
-export interface CreateUserDeserializer {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserDeserializer
-     */
-    'published_timeline_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserDeserializer
-     */
-    'timezone': string;
-    /**
-     * Feature flag to bypass time based guards per user.
-     * @type {boolean}
-     * @memberof CreateUserDeserializer
-     */
-    'disable_time_guards'?: boolean;
-    /**
-     * Feature flag to toggle pausing execution of progression at beat markers.
-     * @type {boolean}
-     * @memberof CreateUserDeserializer
-     */
-    'pause_at_beats'?: boolean;
+export interface CreateUserRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserRequest
+   */
+  published_timeline_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateUserRequest
+   */
+  timezone: string;
+  /**
+   * Feature flag to bypass time based guards per user.
+   * @type {boolean}
+   * @memberof CreateUserRequest
+   */
+  disable_time_guards?: boolean;
+  /**
+   * Feature flag to toggle pausing execution of progression at beat markers.
+   * @type {boolean}
+   * @memberof CreateUserRequest
+   */
+  pause_at_beats?: boolean;
 }
 /**
  * Current beat based on user narrative progress.
@@ -202,127 +202,108 @@ export interface EmbeddedRepresentationOfUserStoryState {
     'active_timeline_id': string;
 }
 /**
- * Instead of our serializer level objects inheriting from BaseModel, they should all inherit from BaseSerializer, which removes the burden of handling the lookup of a entity key identifiers within our API view logic.  By enabling ORM_MODE we can pass in schema objects, and Pydantic will do a __getattr__ style lookup, which will auto unpack the primary key from our BaseSchema inherited object.  We also have a thin wrapper around the __init__, which helps to provide a nicer API when unpacking the results of projection queries into our resource serializers. This can be used in conjunction with the `get_projection_properties` helper to get all entity property names from the datastore index.
+ * API representation of the EventStateChange resource.
  * @export
- * @interface EphemeralTokenSerializer
+ * @interface EventStateChange
  */
-export interface EphemeralTokenSerializer {
-    /**
-     * Access Token used to authenticate with Audience APIs.
-     * @type {string}
-     * @memberof EphemeralTokenSerializer
-     */
-    'access_token': string;
-    /**
-     * Time in seconds until the ID Token expires.
-     * @type {number}
-     * @memberof EphemeralTokenSerializer
-     */
-    'expires_in': number;
+export interface EventStateChange {
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  esc_type: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  narrative_event_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  timeline_event_id: string;
+  /**
+   *
+   * @type {NarrativeEventType}
+   * @memberof EventStateChange
+   */
+  event_type: NarrativeEventType;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  thread_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  beat_id?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof EventStateChange
+   */
+  available_step_index: number;
+  /**
+   *
+   * @type {number}
+   * @memberof EventStateChange
+   */
+  processed_step_index: number;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  workspace_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  project_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  timeline_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  user_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EventStateChange
+   */
+  created_at: string;
 }
 /**
- * Base serializer class for any errors which can be included in a response. This is used by the ResponseSerializer class.  If an error is returned, there should be no data in the response (although we are working on the presumption that metadata may still come back). This is handled in the ResponseSerializer validator.
+ * Base serializer class for any errors which can be included in a response. This is used by the Response serializer class.  If an error is returned, there should be no data in the response (although we are working on the presumption that metadata may still come back). This is handled in the Response serializer validator.
  * @export
- * @interface ErrorSerializer
+ * @interface GeneralError
  */
-export interface ErrorSerializer {
+export interface GeneralError {
     /**
      * 
      * @type {string}
-     * @memberof ErrorSerializer
+     * @memberof GeneralError
      */
     'detail'?: string;
     /**
      * 
      * @type {Array<object>}
-     * @memberof ErrorSerializer
+     * @memberof GeneralError
      */
     'content'?: Array<object>;
-}
-/**
- * API representation of the EventStateChange resource.
- * @export
- * @interface EventStateChangeSerializer
- */
-export interface EventStateChangeSerializer {
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'esc_type': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'narrative_event_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'timeline_event_id': string;
-    /**
-     * 
-     * @type {NarrativeEventType}
-     * @memberof EventStateChangeSerializer
-     */
-    'event_type': NarrativeEventType;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'thread_id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'beat_id'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventStateChangeSerializer
-     */
-    'available_step_index': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof EventStateChangeSerializer
-     */
-    'processed_step_index': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'workspace_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'project_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'timeline_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'user_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EventStateChangeSerializer
-     */
-    'created_at': string;
 }
 /**
  * 
@@ -345,54 +326,54 @@ export interface HTTPValidationError {
 export interface LocationInner {
 }
 /**
- * 
+ * Base serializer class for all metadata which can be included in a response. This is used by the Response serializer class.  This design pattern afford us the ability to include any generic meta data within this block. For example achievements completed as a bi-product of another action, or cursor/pagination/count metadata you might expect on a list endpoint.
  * @export
  * @interface Meta
  */
 export interface Meta {
-    /**
-     * 
-     * @type {Array<UserTimelineEventSerializer>}
-     * @memberof Meta
-     */
-    'changed_timeline_events'?: Array<UserTimelineEventSerializer>;
-    /**
-     * 
-     * @type {Array<UserTimelineEventStateChangeSerializer>}
-     * @memberof Meta
-     */
-    'changed_timeline_event_states'?: Array<UserTimelineEventStateChangeSerializer>;
-    /**
-     * 
-     * @type {ServiceStatus}
-     * @memberof Meta
-     */
-    'service_status'?: ServiceStatus;
+  /**
+   *
+   * @type {Array<UserTimelineEvent>}
+   * @memberof Meta
+   */
+  changed_timeline_events?: Array<UserTimelineEvent>;
+  /**
+   *
+   * @type {Array<UserTimelineEventStateChange>}
+   * @memberof Meta
+   */
+  changed_timeline_event_states?: Array<UserTimelineEventStateChange>;
+  /**
+   *
+   * @type {ServiceStatus}
+   * @memberof Meta
+   */
+  service_status?: ServiceStatus;
 }
 /**
- * Base serializer class for all metadata which can be included in a response. This is used by the ResponseSerializer class.  This design pattern afford us the ability to include any generic meta data within this block. For example achievements completed as a bi-product of another action, or cursor/pagination/count metadata you might expect on a list endpoint.
+ * 
  * @export
- * @interface MetaSerializer
+ * @interface Meta1
  */
-export interface MetaSerializer {
-    /**
-     * 
-     * @type {Array<UserTimelineEventSerializer>}
-     * @memberof MetaSerializer
-     */
-    'changed_timeline_events'?: Array<UserTimelineEventSerializer>;
-    /**
-     * 
-     * @type {Array<UserTimelineEventStateChangeSerializer>}
-     * @memberof MetaSerializer
-     */
-    'changed_timeline_event_states'?: Array<UserTimelineEventStateChangeSerializer>;
-    /**
-     * 
-     * @type {ServiceStatus}
-     * @memberof MetaSerializer
-     */
-    'service_status'?: ServiceStatus;
+export interface Meta1 {
+  /**
+   *
+   * @type {Array<UserTimelineEvent>}
+   * @memberof Meta1
+   */
+  changed_timeline_events?: Array<UserTimelineEvent>;
+  /**
+   *
+   * @type {Array<UserTimelineEventStateChange>}
+   * @memberof Meta1
+   */
+  changed_timeline_event_states?: Array<UserTimelineEventStateChange>;
+  /**
+   *
+   * @type {ServiceStatus}
+   * @memberof Meta1
+   */
+  service_status?: ServiceStatus;
 }
 /**
  * 
@@ -448,174 +429,23 @@ export interface NewBeatAvailable {
     'name'?: string;
 }
 /**
- * Deserializer used to update a user\'s current timeline event ID.
- * @export
- * @interface PatchStoryStateDeserializer
- */
-export interface PatchStoryStateDeserializer {
-    /**
-     * The new event ID to move the user to.
-     * @type {string}
-     * @memberof PatchStoryStateDeserializer
-     */
-    'current_timeline_event_id': string;
-}
-/**
- * Update the `state` of a user timeline event via command.
- * @export
- * @interface PatchUserTimelineEventDeserializer
- */
-export interface PatchUserTimelineEventDeserializer {
-    /**
-     * 
-     * @type {UserInvokedTimelineEventState}
-     * @memberof PatchUserTimelineEventDeserializer
-     */
-    'state': UserInvokedTimelineEventState;
-}
-/**
  * Deserializer used on the progress events RPC endpoint which invokes the execution of the beat machine.  The optional `max_steps` field provides a way for the integration engineer to control this execution context.  The optional `pause_at_beats` field provides a way to override the user level `pause_at_beats` configuration.
  * @export
- * @interface ProgressEventsDeserializer
+ * @interface ProgressEventsRequest
  */
-export interface ProgressEventsDeserializer {
-    /**
-     * The maximum amount of steps that should be progressed
-     * @type {number}
-     * @memberof ProgressEventsDeserializer
-     */
-    'max_steps'?: number;
-    /**
-     * Should beat guards be respected when progressing
-     * @type {boolean}
-     * @memberof ProgressEventsDeserializer
-     */
-    'pause_at_beats'?: boolean;
-}
-/**
- * Base serializer class for all list responses, inheriting error and metadata from ResponseSerializer.
- * @export
- * @interface ResponseListSerializerUserTimelineEventSerializer
- */
-export interface ResponseListSerializerUserTimelineEventSerializer {
-    /**
-     * 
-     * @type {Array<UserTimelineEventSerializer>}
-     * @memberof ResponseListSerializerUserTimelineEventSerializer
-     */
-    'data'?: Array<UserTimelineEventSerializer>;
-    /**
-     * 
-     * @type {Error}
-     * @memberof ResponseListSerializerUserTimelineEventSerializer
-     */
-    'error'?: Error | null;
-    /**
-     * 
-     * @type {Meta}
-     * @memberof ResponseListSerializerUserTimelineEventSerializer
-     */
-    'meta'?: Meta | null;
-}
-/**
- * Base serializer class for all list responses, inheriting error and metadata from ResponseSerializer.
- * @export
- * @interface ResponseListSerializerUserTimelineEventStateChangeSerializer
- */
-export interface ResponseListSerializerUserTimelineEventStateChangeSerializer {
-    /**
-     * 
-     * @type {Array<UserTimelineEventStateChangeSerializer>}
-     * @memberof ResponseListSerializerUserTimelineEventStateChangeSerializer
-     */
-    'data'?: Array<UserTimelineEventStateChangeSerializer>;
-    /**
-     * 
-     * @type {Error}
-     * @memberof ResponseListSerializerUserTimelineEventStateChangeSerializer
-     */
-    'error'?: Error | null;
-    /**
-     * 
-     * @type {Meta}
-     * @memberof ResponseListSerializerUserTimelineEventStateChangeSerializer
-     */
-    'meta'?: Meta | null;
-}
-/**
- * Base serializer class for all responses.
- * @export
- * @interface ResponseSerializerUserSerializer
- */
-export interface ResponseSerializerUserSerializer {
-    /**
-     * 
-     * @type {UserSerializer}
-     * @memberof ResponseSerializerUserSerializer
-     */
-    'data'?: UserSerializer;
-    /**
-     * 
-     * @type {Error}
-     * @memberof ResponseSerializerUserSerializer
-     */
-    'error'?: Error | null;
-    /**
-     * 
-     * @type {Meta}
-     * @memberof ResponseSerializerUserSerializer
-     */
-    'meta'?: Meta | null;
-}
-/**
- * Base serializer class for all responses.
- * @export
- * @interface ResponseSerializerUserStoryStateSerializer
- */
-export interface ResponseSerializerUserStoryStateSerializer {
-    /**
-     * 
-     * @type {UserStoryStateSerializer}
-     * @memberof ResponseSerializerUserStoryStateSerializer
-     */
-    'data'?: UserStoryStateSerializer;
-    /**
-     * 
-     * @type {Error}
-     * @memberof ResponseSerializerUserStoryStateSerializer
-     */
-    'error'?: Error | null;
-    /**
-     * 
-     * @type {Meta}
-     * @memberof ResponseSerializerUserStoryStateSerializer
-     */
-    'meta'?: Meta | null;
-}
-/**
- * Base serializer class for all responses.
- * @export
- * @interface ResponseSerializerUserTimelineEventSerializer
- */
-export interface ResponseSerializerUserTimelineEventSerializer {
-    /**
-     * 
-     * @type {UserTimelineEventSerializer}
-     * @memberof ResponseSerializerUserTimelineEventSerializer
-     */
-    'data'?: UserTimelineEventSerializer;
-    /**
-     * 
-     * @type {Error}
-     * @memberof ResponseSerializerUserTimelineEventSerializer
-     */
-    'error'?: Error | null;
-    /**
-     * 
-     * @type {Meta}
-     * @memberof ResponseSerializerUserTimelineEventSerializer
-     */
-    'meta'?: Meta | null;
+export interface ProgressEventsRequest {
+  /**
+   * The maximum amount of steps that should be progressed
+   * @type {number}
+   * @memberof ProgressEventsRequest
+   */
+  max_steps?: number;
+  /**
+   * Should beat guards be respected when progressing
+   * @type {boolean}
+   * @memberof ProgressEventsRequest
+   */
+  pause_at_beats?: boolean;
 }
 /**
  * An enumeration.
@@ -632,135 +462,173 @@ export type ServiceStatus = typeof ServiceStatus[keyof typeof ServiceStatus];
 
 
 /**
- *     
- * @export
- * @interface TimelineEventSerializer
- */
-export interface TimelineEventSerializer {
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineEventSerializer
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineEventSerializer
-     */
-    'title': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineEventSerializer
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {NarrativeEventType}
-     * @memberof TimelineEventSerializer
-     */
-    'type': NarrativeEventType;
-    /**
-     * 
-     * @type {number}
-     * @memberof TimelineEventSerializer
-     */
-    'step'?: number;
-    /**
-     * 
-     * @type {{ [key: string]: Array<ContentIntegrationSerializer>; }}
-     * @memberof TimelineEventSerializer
-     */
-    'content_integrations': { [key: string]: Array<ContentIntegrationSerializer>; };
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineEventSerializer
-     */
-    'narrative_event_id': string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof TimelineEventSerializer
-     */
-    'narrative_event_custom_data'?: { [key: string]: string; };
-}
-/**
  * API representation of timeline resource.
  * @export
- * @interface TimelineSerializer
+ * @interface Timeline
  */
-export interface TimelineSerializer {
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineSerializer
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineSerializer
-     */
-    'title': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimelineSerializer
-     */
-    'description'?: string;
+export interface Timeline {
+  /**
+   *
+   * @type {string}
+   * @memberof Timeline
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Timeline
+   */
+  title: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Timeline
+   */
+  description?: string;
 }
 /**
  *     
  * @export
- * @interface TokenDeserializer
+ * @interface TimelineEvent
  */
-export interface TokenDeserializer {
-    /**
-     * User ID scoped to the Access Token being generated.
-     * @type {string}
-     * @memberof TokenDeserializer
-     */
-    'user_id': string;
+export interface TimelineEvent {
+  /**
+   *
+   * @type {string}
+   * @memberof TimelineEvent
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TimelineEvent
+   */
+  title: string;
+  /**
+   *
+   * @type {string}
+   * @memberof TimelineEvent
+   */
+  description?: string;
+  /**
+   *
+   * @type {NarrativeEventType}
+   * @memberof TimelineEvent
+   */
+  type: NarrativeEventType;
+  /**
+   *
+   * @type {number}
+   * @memberof TimelineEvent
+   */
+  step?: number;
+  /**
+   *
+   * @type {{ [key: string]: Array<ContentIntegration>; }}
+   * @memberof TimelineEvent
+   */
+  content_integrations: { [key: string]: Array<ContentIntegration> };
+  /**
+   *
+   * @type {string}
+   * @memberof TimelineEvent
+   */
+  narrative_event_id: string;
+  /**
+   *
+   * @type {{ [key: string]: string; }}
+   * @memberof TimelineEvent
+   */
+  narrative_event_custom_data?: { [key: string]: string };
 }
 /**
  * Instead of our serializer level objects inheriting from BaseModel, they should all inherit from BaseSerializer, which removes the burden of handling the lookup of a entity key identifiers within our API view logic.  By enabling ORM_MODE we can pass in schema objects, and Pydantic will do a __getattr__ style lookup, which will auto unpack the primary key from our BaseSchema inherited object.  We also have a thin wrapper around the __init__, which helps to provide a nicer API when unpacking the results of projection queries into our resource serializers. This can be used in conjunction with the `get_projection_properties` helper to get all entity property names from the datastore index.
  * @export
- * @interface TokenIntrospectionDeserializer
+ * @interface TokenIntrospectRequest
  */
-export interface TokenIntrospectionDeserializer {
-    /**
-     * Access Token to introspect
-     * @type {string}
-     * @memberof TokenIntrospectionDeserializer
-     */
-    'access_token': string;
+export interface TokenIntrospectRequest {
+  /**
+   * Access Token to introspect
+   * @type {string}
+   * @memberof TokenIntrospectRequest
+   */
+  access_token: string;
 }
 /**
  * Read only representation of the meta data around an access token.
  * @export
- * @interface TokenIntrospectionSerializer
+ * @interface TokenIntrospectResponse
  */
-export interface TokenIntrospectionSerializer {
-    /**
-     * Status of the token.
-     * @type {boolean}
-     * @memberof TokenIntrospectionSerializer
-     */
-    'is_active': boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof TokenIntrospectionSerializer
-     */
-    'user_id'?: string;
-    /**
-     * Time in seconds until the access token expires.
-     * @type {number}
-     * @memberof TokenIntrospectionSerializer
-     */
-    'expires_in'?: number;
+export interface TokenIntrospectResponse {
+  /**
+   * Status of the token.
+   * @type {boolean}
+   * @memberof TokenIntrospectResponse
+   */
+  is_active: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof TokenIntrospectResponse
+   */
+  user_id?: string;
+  /**
+   * Time in seconds until the access token expires.
+   * @type {number}
+   * @memberof TokenIntrospectResponse
+   */
+  expires_in?: number;
+}
+/**
+ *     
+ * @export
+ * @interface TokenRequest
+ */
+export interface TokenRequest {
+  /**
+   * User ID scoped to the Access Token being generated.
+   * @type {string}
+   * @memberof TokenRequest
+   */
+  user_id: string;
+}
+/**
+ * Instead of our serializer level objects inheriting from BaseModel, they should all inherit from BaseSerializer, which removes the burden of handling the lookup of a entity key identifiers within our API view logic.  By enabling ORM_MODE we can pass in schema objects, and Pydantic will do a __getattr__ style lookup, which will auto unpack the primary key from our BaseSchema inherited object.  We also have a thin wrapper around the __init__, which helps to provide a nicer API when unpacking the results of projection queries into our resource serializers. This can be used in conjunction with the `get_projection_properties` helper to get all entity property names from the datastore index.
+ * @export
+ * @interface TokenResponse
+ */
+export interface TokenResponse {
+  /**
+   * Access Token used to authenticate with Audience APIs.
+   * @type {string}
+   * @memberof TokenResponse
+   */
+  access_token: string;
+  /**
+   * Time in seconds until the ID Token expires.
+   * @type {number}
+   * @memberof TokenResponse
+   */
+  expires_in: number;
+}
+/**
+ * Representation of a user - including a mix of their authentication and experience based properties. This should be considered a read-only serializer.
+ * @export
+ * @interface User
+ */
+export interface User {
+  /**
+   * Unique identifier for the user.
+   * @type {string}
+   * @memberof User
+   */
+  id: string;
+  /**
+   *
+   * @type {EmbeddedRepresentationOfUserStoryState}
+   * @memberof User
+   */
+  narrative_state?: EmbeddedRepresentationOfUserStoryState | null;
 }
 /**
  * All states a User can update a UserTimelineEvent state value to over API.
@@ -781,199 +649,314 @@ export type UserInvokedTimelineEventState = typeof UserInvokedTimelineEventState
 
 
 /**
- * Representation of a user - including a mix of their authentication and experience based properties. This should be considered a read-only serializer.
+ * Base serializer class for all responses.
  * @export
- * @interface UserSerializer
+ * @interface UserResponse
  */
-export interface UserSerializer {
-    /**
-     * Unique identifier for the user.
-     * @type {string}
-     * @memberof UserSerializer
-     */
-    'id': string;
-    /**
-     * 
-     * @type {EmbeddedRepresentationOfUserStoryState}
-     * @memberof UserSerializer
-     */
-    'narrative_state'?: EmbeddedRepresentationOfUserStoryState | null;
+export interface UserResponse {
+  /**
+   *
+   * @type {User}
+   * @memberof UserResponse
+   */
+  data?: User;
+  /**
+   *
+   * @type {Error}
+   * @memberof UserResponse
+   */
+  error?: Error | null;
+  /**
+   *
+   * @type {Meta1}
+   * @memberof UserResponse
+   */
+  meta?: Meta1 | null;
 }
 /**
  * Contains information an integrating client can leverage to elegantly represent and progress the user narrative.
  * @export
- * @interface UserStoryStateSerializer
+ * @interface UserStoryState
  */
-export interface UserStoryStateSerializer {
+export interface UserStoryState {
+  /**
+   * Current step index for user in event delivery sequence
+   * @type {number}
+   * @memberof UserStoryState
+   */
+  current_step?: number;
+  /**
+   *
+   * @type {CurrentBeat}
+   * @memberof UserStoryState
+   */
+  current_beat?: CurrentBeat | null;
+  /**
+   *
+   * @type {NewBeatAvailable}
+   * @memberof UserStoryState
+   */
+  new_beat_available?: NewBeatAvailable | null;
+  /**
+   * Condition currently blocking further progression
+   * @type {string}
+   * @memberof UserStoryState
+   */
+  waiting_for_condition_id?: string;
+  /**
+   * Denotes if all progression conditions have been satisfied. Note this does not mean that all delivery conditions (on threads for example) have been satisfied.
+   * @type {boolean}
+   * @memberof UserStoryState
+   */
+  end_of_timeline_reached: boolean;
+  /**
+   * Contains the ID of the current timeline event if the user position is being stored by patching the user-story-state endpoint.
+   * @type {string}
+   * @memberof UserStoryState
+   */
+  current_timeline_event_id?: string;
+  /**
+   * History of all the `current_timeline_event_id` values, limited to the most recent 200 event IDs.
+   * @type {Array<string>}
+   * @memberof UserStoryState
+   */
+  timeline_event_id_history?: Array<string>;
+  /**
+   * Testing feature which skips any time guards if enabled.
+   * @type {boolean}
+   * @memberof UserStoryState
+   */
+  datetime_guards_disabled: boolean;
+  /**
+   * Should progression execution pause at beats.
+   * @type {boolean}
+   * @memberof UserStoryState
+   */
+  pause_at_beats: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof UserStoryState
+   */
+  active_timeline_id: string;
+}
+/**
+ * Deserializer used to update a user\'s current timeline event ID.
+ * @export
+ * @interface UserStoryStateRequest
+ */
+export interface UserStoryStateRequest {
     /**
-     * Current step index for user in event delivery sequence
-     * @type {number}
-     * @memberof UserStoryStateSerializer
+     * The new event ID to move the user to.
+     * @type {string}
+     * @memberof UserStoryStateRequest
      */
-    'current_step'?: number;
+    'current_timeline_event_id': string;
+}
+/**
+ * Base serializer class for all responses.
+ * @export
+ * @interface UserStoryStateResponse
+ */
+export interface UserStoryStateResponse {
     /**
      * 
-     * @type {CurrentBeat}
-     * @memberof UserStoryStateSerializer
+     * @type {UserStoryState}
+     * @memberof UserStoryStateResponse
      */
-    'current_beat'?: CurrentBeat | null;
+    'data'?: UserStoryState;
     /**
      * 
-     * @type {NewBeatAvailable}
-     * @memberof UserStoryStateSerializer
+     * @type {Error}
+     * @memberof UserStoryStateResponse
      */
-    'new_beat_available'?: NewBeatAvailable | null;
-    /**
-     * Condition currently blocking further progression
-     * @type {string}
-     * @memberof UserStoryStateSerializer
-     */
-    'waiting_for_condition_id'?: string;
-    /**
-     * Denotes if all progression conditions have been satisfied. Note this does not mean that all delivery conditions (on threads for example) have been satisfied.
-     * @type {boolean}
-     * @memberof UserStoryStateSerializer
-     */
-    'end_of_timeline_reached': boolean;
-    /**
-     * Contains the ID of the current timeline event if the user position is being stored by patching the user-story-state endpoint.
-     * @type {string}
-     * @memberof UserStoryStateSerializer
-     */
-    'current_timeline_event_id'?: string;
-    /**
-     * History of all the `current_timeline_event_id` values, limited to the most recent 200 event IDs.
-     * @type {Array<string>}
-     * @memberof UserStoryStateSerializer
-     */
-    'timeline_event_id_history'?: Array<string>;
-    /**
-     * Testing feature which skips any time guards if enabled.
-     * @type {boolean}
-     * @memberof UserStoryStateSerializer
-     */
-    'datetime_guards_disabled': boolean;
-    /**
-     * Should progression execution pause at beats.
-     * @type {boolean}
-     * @memberof UserStoryStateSerializer
-     */
-    'pause_at_beats': boolean;
+    'error'?: Error | null;
     /**
      * 
-     * @type {string}
-     * @memberof UserStoryStateSerializer
+     * @type {Meta1}
+     * @memberof UserStoryStateResponse
      */
-    'active_timeline_id': string;
+    'meta'?: Meta1 | null;
 }
 /**
  * Represents a user timeline event.
  * @export
- * @interface UserTimelineEventSerializer
+ * @interface UserTimelineEvent
  */
-export interface UserTimelineEventSerializer {
+export interface UserTimelineEvent {
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  thread_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  row_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  row_name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  previous_in_row_timeline_event_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  next_in_row_timeline_event_id?: string;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof UserTimelineEvent
+   */
+  related_timeline_event_ids: Array<string>;
+  /**
+   * Identifies the step index in which this event becomes available.
+   * @type {number}
+   * @memberof UserTimelineEvent
+   */
+  available_step_index: number;
+  /**
+   *
+   * @type {AvailableBeat}
+   * @memberof UserTimelineEvent
+   */
+  available_beat?: AvailableBeat;
+  /**
+   *
+   * @type {UserTimelineEventState}
+   * @memberof UserTimelineEvent
+   */
+  state: UserTimelineEventState;
+  /**
+   * Future states which can be mutated by the user over API.
+   * @type {Array<UserInvokedTimelineEventState>}
+   * @memberof UserTimelineEvent
+   */
+  available_states: Array<UserInvokedTimelineEventState>;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_id: string;
+  /**
+   *
+   * @type {NarrativeEventType}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_type: NarrativeEventType;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_title?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_description?: string;
+  /**
+   *
+   * @type {Array<ContentIntegration>}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_content: Array<ContentIntegration>;
+  /**
+   * State change content associated with this event.
+   * @type {{ [key: string]: Array<ContentIntegration>; }}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_state_changes_content: {
+    [key: string]: Array<ContentIntegration>;
+  };
+  /**
+   *
+   * @type {{ [key: string]: string; }}
+   * @memberof UserTimelineEvent
+   */
+  narrative_event_custom_data?: { [key: string]: string };
+}
+/**
+ * Base serializer class for all responses.
+ * @export
+ * @interface UserTimelineEventDetailResponse
+ */
+export interface UserTimelineEventDetailResponse {
     /**
      * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
+     * @type {UserTimelineEvent}
+     * @memberof UserTimelineEventDetailResponse
      */
-    'id': string;
+    'data'?: UserTimelineEvent;
     /**
      * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
+     * @type {Error}
+     * @memberof UserTimelineEventDetailResponse
      */
-    'thread_id'?: string;
+    'error'?: Error | null;
     /**
      * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
+     * @type {Meta1}
+     * @memberof UserTimelineEventDetailResponse
      */
-    'row_id': string;
+    'meta'?: Meta1 | null;
+}
+/**
+ * Base serializer class for all list responses, inheriting error and metadata from Response serializer.
+ * @export
+ * @interface UserTimelineEventListResponse
+ */
+export interface UserTimelineEventListResponse {
     /**
      * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
+     * @type {Array<UserTimelineEvent>}
+     * @memberof UserTimelineEventListResponse
      */
-    'previous_in_row_timeline_event_id'?: string;
+    'data'?: Array<UserTimelineEvent>;
     /**
      * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
+     * @type {Error}
+     * @memberof UserTimelineEventListResponse
      */
-    'next_in_row_timeline_event_id'?: string;
+    'error'?: Error | null;
     /**
      * 
-     * @type {Array<string>}
-     * @memberof UserTimelineEventSerializer
+     * @type {Meta1}
+     * @memberof UserTimelineEventListResponse
      */
-    'related_timeline_event_ids': Array<string>;
-    /**
-     * Identifies the step index in which this event becomes available.
-     * @type {number}
-     * @memberof UserTimelineEventSerializer
-     */
-    'available_step_index': number;
-    /**
-     * 
-     * @type {AvailableBeat}
-     * @memberof UserTimelineEventSerializer
-     */
-    'available_beat'?: AvailableBeat;
+    'meta'?: Meta1 | null;
+}
+/**
+ * Update the `state` of a user timeline event via command.
+ * @export
+ * @interface UserTimelineEventRequest
+ */
+export interface UserTimelineEventRequest {
     /**
      * 
-     * @type {UserTimelineEventState}
-     * @memberof UserTimelineEventSerializer
+     * @type {UserInvokedTimelineEventState}
+     * @memberof UserTimelineEventRequest
      */
-    'state': UserTimelineEventState;
-    /**
-     * Future states which can be mutated by the user over API.
-     * @type {Array<UserInvokedTimelineEventState>}
-     * @memberof UserTimelineEventSerializer
-     */
-    'available_states': Array<UserInvokedTimelineEventState>;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_id': string;
-    /**
-     * 
-     * @type {NarrativeEventType}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_type': NarrativeEventType;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_title'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_description'?: string;
-    /**
-     * 
-     * @type {Array<ContentIntegrationSerializer>}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_content': Array<ContentIntegrationSerializer>;
-    /**
-     * State change content associated with this event.
-     * @type {{ [key: string]: Array<ContentIntegrationSerializer>; }}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_state_changes_content': { [key: string]: Array<ContentIntegrationSerializer>; };
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof UserTimelineEventSerializer
-     */
-    'narrative_event_custom_data'?: { [key: string]: string; };
+    'state': UserInvokedTimelineEventState;
 }
 /**
  * All states UserTimelineEvent entities can be in.
@@ -999,69 +982,100 @@ export type UserTimelineEventState = typeof UserTimelineEventState[keyof typeof 
 /**
  * Represents a user timeline event state change.
  * @export
- * @interface UserTimelineEventStateChangeSerializer
+ * @interface UserTimelineEventStateChange
  */
-export interface UserTimelineEventStateChangeSerializer {
+export interface UserTimelineEventStateChange {
+  /**
+   *
+   * @type {UserTimelineEventState}
+   * @memberof UserTimelineEventStateChange
+   */
+  state: UserTimelineEventState;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  state_changed_at?: string;
+  /**
+   *
+   * @type {Array<ContentIntegration>}
+   * @memberof UserTimelineEventStateChange
+   */
+  state_change_content: Array<ContentIntegration>;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  timeline_event_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  thread_id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  row_id: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  row_name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  narrative_event_id: string;
+  /**
+   *
+   * @type {NarrativeEventType}
+   * @memberof UserTimelineEventStateChange
+   */
+  narrative_event_type: NarrativeEventType;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  narrative_event_title?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserTimelineEventStateChange
+   */
+  narrative_event_description?: string;
+}
+/**
+ * Base serializer class for all list responses, inheriting error and metadata from Response serializer.
+ * @export
+ * @interface UserTimelineEventStateChangeListResponse
+ */
+export interface UserTimelineEventStateChangeListResponse {
     /**
      * 
-     * @type {UserTimelineEventState}
-     * @memberof UserTimelineEventStateChangeSerializer
+     * @type {Array<UserTimelineEventStateChange>}
+     * @memberof UserTimelineEventStateChangeListResponse
      */
-    'state': UserTimelineEventState;
+    'data'?: Array<UserTimelineEventStateChange>;
     /**
      * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
+     * @type {Error}
+     * @memberof UserTimelineEventStateChangeListResponse
      */
-    'state_changed_at'?: string;
+    'error'?: Error | null;
     /**
      * 
-     * @type {Array<ContentIntegrationSerializer>}
-     * @memberof UserTimelineEventStateChangeSerializer
+     * @type {Meta1}
+     * @memberof UserTimelineEventStateChangeListResponse
      */
-    'state_change_content': Array<ContentIntegrationSerializer>;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'timeline_event_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'thread_id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'row_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'narrative_event_id': string;
-    /**
-     * 
-     * @type {NarrativeEventType}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'narrative_event_type': NarrativeEventType;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'narrative_event_title'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserTimelineEventStateChangeSerializer
-     */
-    'narrative_event_description'?: string;
+    'meta'?: Meta1 | null;
 }
 /**
  * 
@@ -1405,96 +1419,217 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
 export const AdminApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration)
     return {
-        /**
-         * Delete all users on a timeline.
-         * @summary Delete all timeline users
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(timelineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(timelineId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Delete timeline user.
-         * @summary Delete timeline user
-         * @param {string} timelineId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(timelineId: string, userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(timelineId, userId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Retrieves timeline user.
-         * @summary Retrieves timeline user
-         * @param {string} timelineId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(timelineId: string, userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(timelineId, userId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * List of all users on timeline.
-         * @summary List all timeline users
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTimelineUsersV1TimelinesTimelineIdUsersGet(timelineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserSerializer>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTimelineUsersV1TimelinesTimelineIdUsersGet(timelineId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Representation of a single timeline.
-         * @summary Retrieves timeline
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTimelineV1TimelinesTimelineIdGet(timelineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TimelineSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTimelineV1TimelinesTimelineIdGet(timelineId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * List all published timelines which users can be placed on.
-         * @summary List all published timelines
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTimelinesV1TimelinesGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TimelineSerializer>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTimelinesV1TimelinesGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Returns all event state changes filtered by timeline.
-         * @summary List all event state changes for timeline.
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(timelineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EventStateChangeSerializer>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(timelineId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Lists all timeline events on a specific timeline.
-         * @summary Lists all timeline events
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(timelineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TimelineEventSerializer>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(timelineId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+      /**
+       * Delete all users on a timeline.
+       * @summary Delete all timeline users
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(
+        timelineId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(
+            timelineId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Delete timeline user.
+       * @summary Delete timeline user
+       * @param {string} timelineId
+       * @param {string} userId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(
+        timelineId: string,
+        userId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(
+            timelineId,
+            userId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Retrieves timeline user.
+       * @summary Retrieves timeline user
+       * @param {string} timelineId
+       * @param {string} userId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(
+        timelineId: string,
+        userId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(
+            timelineId,
+            userId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * List of all users on timeline.
+       * @summary List all timeline users
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getTimelineUsersV1TimelinesTimelineIdUsersGet(
+        timelineId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getTimelineUsersV1TimelinesTimelineIdUsersGet(
+            timelineId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Representation of a single timeline.
+       * @summary Retrieves timeline
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getTimelineV1TimelinesTimelineIdGet(
+        timelineId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Timeline>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getTimelineV1TimelinesTimelineIdGet(
+            timelineId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * List all published timelines which users can be placed on.
+       * @summary List all published timelines
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getTimelinesV1TimelinesGet(
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<Array<Timeline>>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getTimelinesV1TimelinesGet(options);
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Returns all event state changes filtered by timeline.
+       * @summary List all event state changes for timeline.
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(
+        timelineId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<Array<EventStateChange>>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(
+            timelineId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Lists all timeline events on a specific timeline.
+       * @summary Lists all timeline events
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(
+        timelineId: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<Array<TimelineEvent>>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(
+            timelineId,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+    };
 };
 
 /**
@@ -1504,87 +1639,143 @@ export const AdminApiFp = function(configuration?: Configuration) {
 export const AdminApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AdminApiFp(configuration)
     return {
-        /**
-         * Delete all users on a timeline.
-         * @summary Delete all timeline users
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(timelineId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(timelineId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Delete timeline user.
-         * @summary Delete timeline user
-         * @param {string} timelineId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(timelineId: string, userId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(timelineId, userId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Retrieves timeline user.
-         * @summary Retrieves timeline user
-         * @param {string} timelineId 
-         * @param {string} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(timelineId: string, userId: string, options?: any): AxiosPromise<UserSerializer> {
-            return localVarFp.getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(timelineId, userId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * List of all users on timeline.
-         * @summary List all timeline users
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimelineUsersV1TimelinesTimelineIdUsersGet(timelineId: string, options?: any): AxiosPromise<Array<UserSerializer>> {
-            return localVarFp.getTimelineUsersV1TimelinesTimelineIdUsersGet(timelineId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Representation of a single timeline.
-         * @summary Retrieves timeline
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimelineV1TimelinesTimelineIdGet(timelineId: string, options?: any): AxiosPromise<TimelineSerializer> {
-            return localVarFp.getTimelineV1TimelinesTimelineIdGet(timelineId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * List all published timelines which users can be placed on.
-         * @summary List all published timelines
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimelinesV1TimelinesGet(options?: any): AxiosPromise<Array<TimelineSerializer>> {
-            return localVarFp.getTimelinesV1TimelinesGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Returns all event state changes filtered by timeline.
-         * @summary List all event state changes for timeline.
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(timelineId: string, options?: any): AxiosPromise<Array<EventStateChangeSerializer>> {
-            return localVarFp.listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(timelineId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Lists all timeline events on a specific timeline.
-         * @summary Lists all timeline events
-         * @param {string} timelineId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(timelineId: string, options?: any): AxiosPromise<Array<TimelineEventSerializer>> {
-            return localVarFp.listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(timelineId, options).then((request) => request(axios, basePath));
-        },
+      /**
+       * Delete all users on a timeline.
+       * @summary Delete all timeline users
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(
+        timelineId: string,
+        options?: any
+      ): AxiosPromise<void> {
+        return localVarFp
+          .deleteAllTimelineUsersV1TimelinesTimelineIdUsersDelete(
+            timelineId,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Delete timeline user.
+       * @summary Delete timeline user
+       * @param {string} timelineId
+       * @param {string} userId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(
+        timelineId: string,
+        userId: string,
+        options?: any
+      ): AxiosPromise<void> {
+        return localVarFp
+          .deleteTimelineUserV1TimelinesTimelineIdUsersUserIdDelete(
+            timelineId,
+            userId,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Retrieves timeline user.
+       * @summary Retrieves timeline user
+       * @param {string} timelineId
+       * @param {string} userId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(
+        timelineId: string,
+        userId: string,
+        options?: any
+      ): AxiosPromise<User> {
+        return localVarFp
+          .getTimelineUserV1TimelinesTimelineIdUsersUserIdGet(
+            timelineId,
+            userId,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * List of all users on timeline.
+       * @summary List all timeline users
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getTimelineUsersV1TimelinesTimelineIdUsersGet(
+        timelineId: string,
+        options?: any
+      ): AxiosPromise<Array<User>> {
+        return localVarFp
+          .getTimelineUsersV1TimelinesTimelineIdUsersGet(timelineId, options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Representation of a single timeline.
+       * @summary Retrieves timeline
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getTimelineV1TimelinesTimelineIdGet(
+        timelineId: string,
+        options?: any
+      ): AxiosPromise<Timeline> {
+        return localVarFp
+          .getTimelineV1TimelinesTimelineIdGet(timelineId, options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * List all published timelines which users can be placed on.
+       * @summary List all published timelines
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getTimelinesV1TimelinesGet(options?: any): AxiosPromise<Array<Timeline>> {
+        return localVarFp
+          .getTimelinesV1TimelinesGet(options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Returns all event state changes filtered by timeline.
+       * @summary List all event state changes for timeline.
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(
+        timelineId: string,
+        options?: any
+      ): AxiosPromise<Array<EventStateChange>> {
+        return localVarFp
+          .listAllTimelineEventStateChangesV1TimelinesTimelineIdEventStateChangesGet(
+            timelineId,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Lists all timeline events on a specific timeline.
+       * @summary Lists all timeline events
+       * @param {string} timelineId
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(
+        timelineId: string,
+        options?: any
+      ): AxiosPromise<Array<TimelineEvent>> {
+        return localVarFp
+          .listTimelineTimelineEventsV1TimelinesTimelineIdTimelineEventsGet(
+            timelineId,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
     };
 };
 
@@ -1700,85 +1891,129 @@ export class AdminApi extends BaseAPI {
  */
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
-         * @summary Generate a new Access Token for a user.
-         * @param {TokenDeserializer} tokenDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        generateTokensV1AuthTokenPost: async (tokenDeserializer: TokenDeserializer, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'tokenDeserializer' is not null or undefined
-            assertParamExists('generateTokensV1AuthTokenPost', 'tokenDeserializer', tokenDeserializer)
-            const localVarPath = `/v1/auth/token`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+      /**
+       * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
+       * @summary Generate a new Access Token for a user.
+       * @param {TokenRequest} tokenRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      generateTokensV1AuthTokenPost: async (
+        tokenRequest: TokenRequest,
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        // verify required parameter 'tokenRequest' is not null or undefined
+        assertParamExists(
+          "generateTokensV1AuthTokenPost",
+          "tokenRequest",
+          tokenRequest
+        );
+        const localVarPath = `/v1/auth/token`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        const localVarRequestOptions = {
+          method: "POST",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            // authentication Fictioneers API Key Header Authentication required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+        // authentication Fictioneers API Key Header Authentication required
+        await setApiKeyToObject(
+          localVarHeaderParameter,
+          "Authorization",
+          configuration
+        );
 
+        localVarHeaderParameter["Content-Type"] = "application/json";
 
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
+        localVarRequestOptions.data = serializeDataIfNeeded(
+          tokenRequest,
+          localVarRequestOptions,
+          configuration
+        );
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(tokenDeserializer, localVarRequestOptions, configuration)
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+      /**
+       * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header.
+       * @summary Introspect an Access Token (development use only).
+       * @param {TokenIntrospectRequest} tokenIntrospectRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      tokenInfoV1AuthIntrospectTokenPost: async (
+        tokenIntrospectRequest: TokenIntrospectRequest,
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        // verify required parameter 'tokenIntrospectRequest' is not null or undefined
+        assertParamExists(
+          "tokenInfoV1AuthIntrospectTokenPost",
+          "tokenIntrospectRequest",
+          tokenIntrospectRequest
+        );
+        const localVarPath = `/v1/auth/introspect-token`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header. 
-         * @summary Introspect an Access Token (development use only).
-         * @param {TokenIntrospectionDeserializer} tokenIntrospectionDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        tokenInfoV1AuthIntrospectTokenPost: async (tokenIntrospectionDeserializer: TokenIntrospectionDeserializer, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'tokenIntrospectionDeserializer' is not null or undefined
-            assertParamExists('tokenInfoV1AuthIntrospectTokenPost', 'tokenIntrospectionDeserializer', tokenIntrospectionDeserializer)
-            const localVarPath = `/v1/auth/introspect-token`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+        const localVarRequestOptions = {
+          method: "POST",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        // authentication Fictioneers API Key Header Authentication required
+        await setApiKeyToObject(
+          localVarHeaderParameter,
+          "Authorization",
+          configuration
+        );
 
-            // authentication Fictioneers API Key Header Authentication required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+        localVarHeaderParameter["Content-Type"] = "application/json";
 
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
+        localVarRequestOptions.data = serializeDataIfNeeded(
+          tokenIntrospectRequest,
+          localVarRequestOptions,
+          configuration
+        );
 
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(tokenIntrospectionDeserializer, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+    };
 };
 
 /**
@@ -1788,29 +2023,63 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
-        /**
-         * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
-         * @summary Generate a new Access Token for a user.
-         * @param {TokenDeserializer} tokenDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async generateTokensV1AuthTokenPost(tokenDeserializer: TokenDeserializer, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EphemeralTokenSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.generateTokensV1AuthTokenPost(tokenDeserializer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header. 
-         * @summary Introspect an Access Token (development use only).
-         * @param {TokenIntrospectionDeserializer} tokenIntrospectionDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectionDeserializer: TokenIntrospectionDeserializer, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TokenIntrospectionSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectionDeserializer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+      /**
+       * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
+       * @summary Generate a new Access Token for a user.
+       * @param {TokenRequest} tokenRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async generateTokensV1AuthTokenPost(
+        tokenRequest: TokenRequest,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<TokenResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.generateTokensV1AuthTokenPost(
+            tokenRequest,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header.
+       * @summary Introspect an Access Token (development use only).
+       * @param {TokenIntrospectRequest} tokenIntrospectRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async tokenInfoV1AuthIntrospectTokenPost(
+        tokenIntrospectRequest: TokenIntrospectRequest,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<TokenIntrospectResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.tokenInfoV1AuthIntrospectTokenPost(
+            tokenIntrospectRequest,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+    };
 };
 
 /**
@@ -1820,26 +2089,36 @@ export const AuthApiFp = function(configuration?: Configuration) {
 export const AuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AuthApiFp(configuration)
     return {
-        /**
-         * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
-         * @summary Generate a new Access Token for a user.
-         * @param {TokenDeserializer} tokenDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        generateTokensV1AuthTokenPost(tokenDeserializer: TokenDeserializer, options?: any): AxiosPromise<EphemeralTokenSerializer> {
-            return localVarFp.generateTokensV1AuthTokenPost(tokenDeserializer, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header. 
-         * @summary Introspect an Access Token (development use only).
-         * @param {TokenIntrospectionDeserializer} tokenIntrospectionDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectionDeserializer: TokenIntrospectionDeserializer, options?: any): AxiosPromise<TokenIntrospectionSerializer> {
-            return localVarFp.tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectionDeserializer, options).then((request) => request(axios, basePath));
-        },
+      /**
+       * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
+       * @summary Generate a new Access Token for a user.
+       * @param {TokenRequest} tokenRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      generateTokensV1AuthTokenPost(
+        tokenRequest: TokenRequest,
+        options?: any
+      ): AxiosPromise<TokenResponse> {
+        return localVarFp
+          .generateTokensV1AuthTokenPost(tokenRequest, options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header.
+       * @summary Introspect an Access Token (development use only).
+       * @param {TokenIntrospectRequest} tokenIntrospectRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      tokenInfoV1AuthIntrospectTokenPost(
+        tokenIntrospectRequest: TokenIntrospectRequest,
+        options?: any
+      ): AxiosPromise<TokenIntrospectResponse> {
+        return localVarFp
+          .tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectRequest, options)
+          .then((request) => request(axios, basePath));
+      },
     };
 };
 
@@ -1850,29 +2129,39 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  * @extends {BaseAPI}
  */
 export class AuthApi extends BaseAPI {
-    /**
-     * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
-     * @summary Generate a new Access Token for a user.
-     * @param {TokenDeserializer} tokenDeserializer 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public generateTokensV1AuthTokenPost(tokenDeserializer: TokenDeserializer, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).generateTokensV1AuthTokenPost(tokenDeserializer, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Generate a new Access Token which can be used to authenticate against the Audience API.  An API key is required in the HTTP Authorization header.
+   * @summary Generate a new Access Token for a user.
+   * @param {TokenRequest} tokenRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public generateTokensV1AuthTokenPost(
+    tokenRequest: TokenRequest,
+    options?: AxiosRequestConfig
+  ) {
+    return AuthApiFp(this.configuration)
+      .generateTokensV1AuthTokenPost(tokenRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header. 
-     * @summary Introspect an Access Token (development use only).
-     * @param {TokenIntrospectionDeserializer} tokenIntrospectionDeserializer 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectionDeserializer: TokenIntrospectionDeserializer, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectionDeserializer, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Inspect an Access token generated by the Fictioneers Authorization service.  Requires a secret API Key in the HTTP Authorization header.
+   * @summary Introspect an Access Token (development use only).
+   * @param {TokenIntrospectRequest} tokenIntrospectRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public tokenInfoV1AuthIntrospectTokenPost(
+    tokenIntrospectRequest: TokenIntrospectRequest,
+    options?: AxiosRequestConfig
+  ) {
+    return AuthApiFp(this.configuration)
+      .tokenInfoV1AuthIntrospectTokenPost(tokenIntrospectRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
 
 
@@ -1882,121 +2171,166 @@ export class AuthApi extends BaseAPI {
  */
 export const UserStoryStateApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Representation of authenticated users narrative story state.
-         * @summary Retrieves user narrative state
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserStoryStateV1UserStoryStateGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/user-story-state`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+      /**
+       * Representation of authenticated users narrative story state.
+       * @summary Retrieves user narrative state
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getUserStoryStateV1UserStoryStateGet: async (
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        const localVarPath = `/v1/user-story-state`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        const localVarRequestOptions = {
+          method: "GET",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
 
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+      /**
+       * Updates the current timeline event ID for the user, adding the previous value to the history.
+       * @summary Updates the current timeline event ID for the user
+       * @param {UserStoryStateRequest} userStoryStateRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      patchUserStoryStateV1UserStoryStatePatch: async (
+        userStoryStateRequest: UserStoryStateRequest,
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        // verify required parameter 'userStoryStateRequest' is not null or undefined
+        assertParamExists(
+          "patchUserStoryStateV1UserStoryStatePatch",
+          "userStoryStateRequest",
+          userStoryStateRequest
+        );
+        const localVarPath = `/v1/user-story-state`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Updates the current timeline event ID for the user, adding the previous value to the history.
-         * @summary Updates the current timeline event ID for the user
-         * @param {PatchStoryStateDeserializer} patchStoryStateDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        patchUserStoryStateV1UserStoryStatePatch: async (patchStoryStateDeserializer: PatchStoryStateDeserializer, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'patchStoryStateDeserializer' is not null or undefined
-            assertParamExists('patchUserStoryStateV1UserStoryStatePatch', 'patchStoryStateDeserializer', patchStoryStateDeserializer)
-            const localVarPath = `/v1/user-story-state`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+        const localVarRequestOptions = {
+          method: "PATCH",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        localVarHeaderParameter["Content-Type"] = "application/json";
 
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
+        localVarRequestOptions.data = serializeDataIfNeeded(
+          userStoryStateRequest,
+          localVarRequestOptions,
+          configuration
+        );
 
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+      /**
+       * Progress events based on the authenticated user available transition events.
+       * @summary Progress timeline events
+       * @param {ProgressEventsRequest} progressEventsRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      stepEventsForUserViaPostV1UserStoryStateProgressEventsPost: async (
+        progressEventsRequest: ProgressEventsRequest,
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        // verify required parameter 'progressEventsRequest' is not null or undefined
+        assertParamExists(
+          "stepEventsForUserViaPostV1UserStoryStateProgressEventsPost",
+          "progressEventsRequest",
+          progressEventsRequest
+        );
+        const localVarPath = `/v1/user-story-state/progress-events`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchStoryStateDeserializer, localVarRequestOptions, configuration)
+        const localVarRequestOptions = {
+          method: "POST",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Progress events based on the authenticated user available transition events.
-         * @summary Progress timeline events
-         * @param {ProgressEventsDeserializer} progressEventsDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        stepEventsForUserViaPostV1UserStoryStateProgressEventsPost: async (progressEventsDeserializer: ProgressEventsDeserializer, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'progressEventsDeserializer' is not null or undefined
-            assertParamExists('stepEventsForUserViaPostV1UserStoryStateProgressEventsPost', 'progressEventsDeserializer', progressEventsDeserializer)
-            const localVarPath = `/v1/user-story-state/progress-events`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        localVarHeaderParameter["Content-Type"] = "application/json";
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
+        localVarRequestOptions.data = serializeDataIfNeeded(
+          progressEventsRequest,
+          localVarRequestOptions,
+          configuration
+        );
 
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(progressEventsDeserializer, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+    };
 };
 
 /**
@@ -2006,39 +2340,88 @@ export const UserStoryStateApiAxiosParamCreator = function (configuration?: Conf
 export const UserStoryStateApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserStoryStateApiAxiosParamCreator(configuration)
     return {
-        /**
-         * Representation of authenticated users narrative story state.
-         * @summary Retrieves user narrative state
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserStoryStateV1UserStoryStateGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseSerializerUserStoryStateSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStoryStateV1UserStoryStateGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Updates the current timeline event ID for the user, adding the previous value to the history.
-         * @summary Updates the current timeline event ID for the user
-         * @param {PatchStoryStateDeserializer} patchStoryStateDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async patchUserStoryStateV1UserStoryStatePatch(patchStoryStateDeserializer: PatchStoryStateDeserializer, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseSerializerUserStoryStateSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.patchUserStoryStateV1UserStoryStatePatch(patchStoryStateDeserializer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Progress events based on the authenticated user available transition events.
-         * @summary Progress timeline events
-         * @param {ProgressEventsDeserializer} progressEventsDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(progressEventsDeserializer: ProgressEventsDeserializer, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseSerializerUserStoryStateSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(progressEventsDeserializer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+      /**
+       * Representation of authenticated users narrative story state.
+       * @summary Retrieves user narrative state
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getUserStoryStateV1UserStoryStateGet(
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<UserStoryStateResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getUserStoryStateV1UserStoryStateGet(
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Updates the current timeline event ID for the user, adding the previous value to the history.
+       * @summary Updates the current timeline event ID for the user
+       * @param {UserStoryStateRequest} userStoryStateRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async patchUserStoryStateV1UserStoryStatePatch(
+        userStoryStateRequest: UserStoryStateRequest,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<UserStoryStateResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.patchUserStoryStateV1UserStoryStatePatch(
+            userStoryStateRequest,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Progress events based on the authenticated user available transition events.
+       * @summary Progress timeline events
+       * @param {ProgressEventsRequest} progressEventsRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(
+        progressEventsRequest: ProgressEventsRequest,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<UserStoryStateResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(
+            progressEventsRequest,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+    };
 };
 
 /**
@@ -2048,35 +2431,55 @@ export const UserStoryStateApiFp = function(configuration?: Configuration) {
 export const UserStoryStateApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserStoryStateApiFp(configuration)
     return {
-        /**
-         * Representation of authenticated users narrative story state.
-         * @summary Retrieves user narrative state
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserStoryStateV1UserStoryStateGet(options?: any): AxiosPromise<ResponseSerializerUserStoryStateSerializer> {
-            return localVarFp.getUserStoryStateV1UserStoryStateGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Updates the current timeline event ID for the user, adding the previous value to the history.
-         * @summary Updates the current timeline event ID for the user
-         * @param {PatchStoryStateDeserializer} patchStoryStateDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        patchUserStoryStateV1UserStoryStatePatch(patchStoryStateDeserializer: PatchStoryStateDeserializer, options?: any): AxiosPromise<ResponseSerializerUserStoryStateSerializer> {
-            return localVarFp.patchUserStoryStateV1UserStoryStatePatch(patchStoryStateDeserializer, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Progress events based on the authenticated user available transition events.
-         * @summary Progress timeline events
-         * @param {ProgressEventsDeserializer} progressEventsDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(progressEventsDeserializer: ProgressEventsDeserializer, options?: any): AxiosPromise<ResponseSerializerUserStoryStateSerializer> {
-            return localVarFp.stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(progressEventsDeserializer, options).then((request) => request(axios, basePath));
-        },
+      /**
+       * Representation of authenticated users narrative story state.
+       * @summary Retrieves user narrative state
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getUserStoryStateV1UserStoryStateGet(
+        options?: any
+      ): AxiosPromise<UserStoryStateResponse> {
+        return localVarFp
+          .getUserStoryStateV1UserStoryStateGet(options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Updates the current timeline event ID for the user, adding the previous value to the history.
+       * @summary Updates the current timeline event ID for the user
+       * @param {UserStoryStateRequest} userStoryStateRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      patchUserStoryStateV1UserStoryStatePatch(
+        userStoryStateRequest: UserStoryStateRequest,
+        options?: any
+      ): AxiosPromise<UserStoryStateResponse> {
+        return localVarFp
+          .patchUserStoryStateV1UserStoryStatePatch(
+            userStoryStateRequest,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Progress events based on the authenticated user available transition events.
+       * @summary Progress timeline events
+       * @param {ProgressEventsRequest} progressEventsRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(
+        progressEventsRequest: ProgressEventsRequest,
+        options?: any
+      ): AxiosPromise<UserStoryStateResponse> {
+        return localVarFp
+          .stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(
+            progressEventsRequest,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
     };
 };
 
@@ -2087,40 +2490,55 @@ export const UserStoryStateApiFactory = function (configuration?: Configuration,
  * @extends {BaseAPI}
  */
 export class UserStoryStateApi extends BaseAPI {
-    /**
-     * Representation of authenticated users narrative story state.
-     * @summary Retrieves user narrative state
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserStoryStateApi
-     */
-    public getUserStoryStateV1UserStoryStateGet(options?: AxiosRequestConfig) {
-        return UserStoryStateApiFp(this.configuration).getUserStoryStateV1UserStoryStateGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Representation of authenticated users narrative story state.
+   * @summary Retrieves user narrative state
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserStoryStateApi
+   */
+  public getUserStoryStateV1UserStoryStateGet(options?: AxiosRequestConfig) {
+    return UserStoryStateApiFp(this.configuration)
+      .getUserStoryStateV1UserStoryStateGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * Updates the current timeline event ID for the user, adding the previous value to the history.
-     * @summary Updates the current timeline event ID for the user
-     * @param {PatchStoryStateDeserializer} patchStoryStateDeserializer 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserStoryStateApi
-     */
-    public patchUserStoryStateV1UserStoryStatePatch(patchStoryStateDeserializer: PatchStoryStateDeserializer, options?: AxiosRequestConfig) {
-        return UserStoryStateApiFp(this.configuration).patchUserStoryStateV1UserStoryStatePatch(patchStoryStateDeserializer, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Updates the current timeline event ID for the user, adding the previous value to the history.
+   * @summary Updates the current timeline event ID for the user
+   * @param {UserStoryStateRequest} userStoryStateRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserStoryStateApi
+   */
+  public patchUserStoryStateV1UserStoryStatePatch(
+    userStoryStateRequest: UserStoryStateRequest,
+    options?: AxiosRequestConfig
+  ) {
+    return UserStoryStateApiFp(this.configuration)
+      .patchUserStoryStateV1UserStoryStatePatch(userStoryStateRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * Progress events based on the authenticated user available transition events.
-     * @summary Progress timeline events
-     * @param {ProgressEventsDeserializer} progressEventsDeserializer 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserStoryStateApi
-     */
-    public stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(progressEventsDeserializer: ProgressEventsDeserializer, options?: AxiosRequestConfig) {
-        return UserStoryStateApiFp(this.configuration).stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(progressEventsDeserializer, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Progress events based on the authenticated user available transition events.
+   * @summary Progress timeline events
+   * @param {ProgressEventsRequest} progressEventsRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserStoryStateApi
+   */
+  public stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(
+    progressEventsRequest: ProgressEventsRequest,
+    options?: AxiosRequestConfig
+  ) {
+    return UserStoryStateApiFp(this.configuration)
+      .stepEventsForUserViaPostV1UserStoryStateProgressEventsPost(
+        progressEventsRequest,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
 
 
@@ -2179,18 +2597,35 @@ export const UserTimelineEventStateChangesApiAxiosParamCreator = function (confi
 export const UserTimelineEventStateChangesApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserTimelineEventStateChangesApiAxiosParamCreator(configuration)
     return {
-        /**
-         * List endpoint for user timeline event state changes implicitly filtered by the authenticated user ID.
-         * @summary Lists all user timeline event state changes
-         * @param {string} [contentType] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(contentType?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseListSerializerUserTimelineEventStateChangeSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(contentType, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+      /**
+       * List endpoint for user timeline event state changes implicitly filtered by the authenticated user ID.
+       * @summary Lists all user timeline event state changes
+       * @param {string} [contentType]
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(
+        contentType?: string,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<UserTimelineEventStateChangeListResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(
+            contentType,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+    };
 };
 
 /**
@@ -2200,16 +2635,24 @@ export const UserTimelineEventStateChangesApiFp = function(configuration?: Confi
 export const UserTimelineEventStateChangesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserTimelineEventStateChangesApiFp(configuration)
     return {
-        /**
-         * List endpoint for user timeline event state changes implicitly filtered by the authenticated user ID.
-         * @summary Lists all user timeline event state changes
-         * @param {string} [contentType] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(contentType?: string, options?: any): AxiosPromise<ResponseListSerializerUserTimelineEventStateChangeSerializer> {
-            return localVarFp.getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(contentType, options).then((request) => request(axios, basePath));
-        },
+      /**
+       * List endpoint for user timeline event state changes implicitly filtered by the authenticated user ID.
+       * @summary Lists all user timeline event state changes
+       * @param {string} [contentType]
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(
+        contentType?: string,
+        options?: any
+      ): AxiosPromise<UserTimelineEventStateChangeListResponse> {
+        return localVarFp
+          .getUserTimelineEventStateChangesV1UserTimelineEventStateChangesGet(
+            contentType,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
     };
 };
 
@@ -2240,85 +2683,120 @@ export class UserTimelineEventStateChangesApi extends BaseAPI {
  */
 export const UserTimelineEventsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
-         * @summary Lists all timeline events for user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listTimelineEventsForUserV1UserTimelineEventsGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/user-timeline-events`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+      /**
+       * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
+       * @summary Lists all timeline events for user.
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      listTimelineEventsForUserV1UserTimelineEventsGet: async (
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        const localVarPath = `/v1/user-timeline-events`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        const localVarRequestOptions = {
+          method: "GET",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
 
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+      /**
+       * Patch endpoint for user timeline events.
+       * @summary Update a user timeline event
+       * @param {string} timelineEventId
+       * @param {UserTimelineEventRequest} userTimelineEventRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch: async (
+        timelineEventId: string,
+        userTimelineEventRequest: UserTimelineEventRequest,
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        // verify required parameter 'timelineEventId' is not null or undefined
+        assertParamExists(
+          "updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch",
+          "timelineEventId",
+          timelineEventId
+        );
+        // verify required parameter 'userTimelineEventRequest' is not null or undefined
+        assertParamExists(
+          "updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch",
+          "userTimelineEventRequest",
+          userTimelineEventRequest
+        );
+        const localVarPath =
+          `/v1/user-timeline-events/{timeline_event_id}`.replace(
+            `{${"timeline_event_id"}}`,
+            encodeURIComponent(String(timelineEventId))
+          );
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Patch endpoint for user timeline events.
-         * @summary Update a user timeline event
-         * @param {string} timelineEventId 
-         * @param {PatchUserTimelineEventDeserializer} patchUserTimelineEventDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch: async (timelineEventId: string, patchUserTimelineEventDeserializer: PatchUserTimelineEventDeserializer, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'timelineEventId' is not null or undefined
-            assertParamExists('updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch', 'timelineEventId', timelineEventId)
-            // verify required parameter 'patchUserTimelineEventDeserializer' is not null or undefined
-            assertParamExists('updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch', 'patchUserTimelineEventDeserializer', patchUserTimelineEventDeserializer)
-            const localVarPath = `/v1/user-timeline-events/{timeline_event_id}`
-                .replace(`{${"timeline_event_id"}}`, encodeURIComponent(String(timelineEventId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+        const localVarRequestOptions = {
+          method: "PATCH",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        localVarHeaderParameter["Content-Type"] = "application/json";
 
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
+        localVarRequestOptions.data = serializeDataIfNeeded(
+          userTimelineEventRequest,
+          localVarRequestOptions,
+          configuration
+        );
 
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchUserTimelineEventDeserializer, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+    };
 };
 
 /**
@@ -2328,29 +2806,63 @@ export const UserTimelineEventsApiAxiosParamCreator = function (configuration?: 
 export const UserTimelineEventsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserTimelineEventsApiAxiosParamCreator(configuration)
     return {
-        /**
-         * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
-         * @summary Lists all timeline events for user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listTimelineEventsForUserV1UserTimelineEventsGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseListSerializerUserTimelineEventSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listTimelineEventsForUserV1UserTimelineEventsGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Patch endpoint for user timeline events.
-         * @summary Update a user timeline event
-         * @param {string} timelineEventId 
-         * @param {PatchUserTimelineEventDeserializer} patchUserTimelineEventDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(timelineEventId: string, patchUserTimelineEventDeserializer: PatchUserTimelineEventDeserializer, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseSerializerUserTimelineEventSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(timelineEventId, patchUserTimelineEventDeserializer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+      /**
+       * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
+       * @summary Lists all timeline events for user.
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async listTimelineEventsForUserV1UserTimelineEventsGet(
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<UserTimelineEventListResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.listTimelineEventsForUserV1UserTimelineEventsGet(
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Patch endpoint for user timeline events.
+       * @summary Update a user timeline event
+       * @param {string} timelineEventId
+       * @param {UserTimelineEventRequest} userTimelineEventRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(
+        timelineEventId: string,
+        userTimelineEventRequest: UserTimelineEventRequest,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (
+          axios?: AxiosInstance,
+          basePath?: string
+        ) => AxiosPromise<UserTimelineEventDetailResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(
+            timelineEventId,
+            userTimelineEventRequest,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+    };
 };
 
 /**
@@ -2360,26 +2872,40 @@ export const UserTimelineEventsApiFp = function(configuration?: Configuration) {
 export const UserTimelineEventsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserTimelineEventsApiFp(configuration)
     return {
-        /**
-         * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
-         * @summary Lists all timeline events for user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listTimelineEventsForUserV1UserTimelineEventsGet(options?: any): AxiosPromise<ResponseListSerializerUserTimelineEventSerializer> {
-            return localVarFp.listTimelineEventsForUserV1UserTimelineEventsGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Patch endpoint for user timeline events.
-         * @summary Update a user timeline event
-         * @param {string} timelineEventId 
-         * @param {PatchUserTimelineEventDeserializer} patchUserTimelineEventDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(timelineEventId: string, patchUserTimelineEventDeserializer: PatchUserTimelineEventDeserializer, options?: any): AxiosPromise<ResponseSerializerUserTimelineEventSerializer> {
-            return localVarFp.updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(timelineEventId, patchUserTimelineEventDeserializer, options).then((request) => request(axios, basePath));
-        },
+      /**
+       * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
+       * @summary Lists all timeline events for user.
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      listTimelineEventsForUserV1UserTimelineEventsGet(
+        options?: any
+      ): AxiosPromise<UserTimelineEventListResponse> {
+        return localVarFp
+          .listTimelineEventsForUserV1UserTimelineEventsGet(options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Patch endpoint for user timeline events.
+       * @summary Update a user timeline event
+       * @param {string} timelineEventId
+       * @param {UserTimelineEventRequest} userTimelineEventRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(
+        timelineEventId: string,
+        userTimelineEventRequest: UserTimelineEventRequest,
+        options?: any
+      ): AxiosPromise<UserTimelineEventDetailResponse> {
+        return localVarFp
+          .updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(
+            timelineEventId,
+            userTimelineEventRequest,
+            options
+          )
+          .then((request) => request(axios, basePath));
+      },
     };
 };
 
@@ -2390,29 +2916,43 @@ export const UserTimelineEventsApiFactory = function (configuration?: Configurat
  * @extends {BaseAPI}
  */
 export class UserTimelineEventsApi extends BaseAPI {
-    /**
-     * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
-     * @summary Lists all timeline events for user.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserTimelineEventsApi
-     */
-    public listTimelineEventsForUserV1UserTimelineEventsGet(options?: AxiosRequestConfig) {
-        return UserTimelineEventsApiFp(this.configuration).listTimelineEventsForUserV1UserTimelineEventsGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * List endpoint for user timeline events ordered by step index (including events in an INITIAL state).
+   * @summary Lists all timeline events for user.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserTimelineEventsApi
+   */
+  public listTimelineEventsForUserV1UserTimelineEventsGet(
+    options?: AxiosRequestConfig
+  ) {
+    return UserTimelineEventsApiFp(this.configuration)
+      .listTimelineEventsForUserV1UserTimelineEventsGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * Patch endpoint for user timeline events.
-     * @summary Update a user timeline event
-     * @param {string} timelineEventId 
-     * @param {PatchUserTimelineEventDeserializer} patchUserTimelineEventDeserializer 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserTimelineEventsApi
-     */
-    public updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(timelineEventId: string, patchUserTimelineEventDeserializer: PatchUserTimelineEventDeserializer, options?: AxiosRequestConfig) {
-        return UserTimelineEventsApiFp(this.configuration).updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(timelineEventId, patchUserTimelineEventDeserializer, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Patch endpoint for user timeline events.
+   * @summary Update a user timeline event
+   * @param {string} timelineEventId
+   * @param {UserTimelineEventRequest} userTimelineEventRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserTimelineEventsApi
+   */
+  public updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(
+    timelineEventId: string,
+    userTimelineEventRequest: UserTimelineEventRequest,
+    options?: AxiosRequestConfig
+  ) {
+    return UserTimelineEventsApiFp(this.configuration)
+      .updateUserTimelineEventV1UserTimelineEventsTimelineEventIdPatch(
+        timelineEventId,
+        userTimelineEventRequest,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
 
 
@@ -2422,115 +2962,151 @@ export class UserTimelineEventsApi extends BaseAPI {
  */
 export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Create a new audience user for a Fictioneers powered experience.
-         * @summary Create new audience user
-         * @param {CreateUserDeserializer} createUserDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUserV1UsersPost: async (createUserDeserializer: CreateUserDeserializer, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createUserDeserializer' is not null or undefined
-            assertParamExists('createUserV1UsersPost', 'createUserDeserializer', createUserDeserializer)
-            const localVarPath = `/v1/users`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+      /**
+       * Create a new audience user for a Fictioneers powered experience.
+       * @summary Create new audience user
+       * @param {CreateUserRequest} createUserRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      createUserV1UsersPost: async (
+        createUserRequest: CreateUserRequest,
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        // verify required parameter 'createUserRequest' is not null or undefined
+        assertParamExists(
+          "createUserV1UsersPost",
+          "createUserRequest",
+          createUserRequest
+        );
+        const localVarPath = `/v1/users`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        const localVarRequestOptions = {
+          method: "POST",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
+        localVarHeaderParameter["Content-Type"] = "application/json";
 
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
+        localVarRequestOptions.data = serializeDataIfNeeded(
+          createUserRequest,
+          localVarRequestOptions,
+          configuration
+        );
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createUserDeserializer, localVarRequestOptions, configuration)
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+      /**
+       * Delete the user and any user associated objects from the current timeline.
+       * @summary Delete current user
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      deleteUserV1UsersMeDelete: async (
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        const localVarPath = `/v1/users/me`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Delete the user and any user associated objects from the current timeline.
-         * @summary Delete current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserV1UsersMeDelete: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/users/me`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+        const localVarRequestOptions = {
+          method: "DELETE",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
 
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+      /**
+       * Retrieve detailed representation of the current user (and user story state).
+       * @summary Retrieve current user
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getUserMeV1UsersMeGet: async (
+        options: AxiosRequestConfig = {}
+      ): Promise<RequestArgs> => {
+        const localVarPath = `/v1/users/me`;
+        // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+        let baseOptions;
+        if (configuration) {
+          baseOptions = configuration.baseOptions;
+        }
 
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+        const localVarRequestOptions = {
+          method: "GET",
+          ...baseOptions,
+          ...options,
+        };
+        const localVarHeaderParameter = {} as any;
+        const localVarQueryParameter = {} as any;
 
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Retrieve detailed representation of the current user (and user story state).
-         * @summary Retrieve current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserMeV1UsersMeGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/users/me`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
+        // authentication Fictioneers API HTTP Bearer required
+        // http bearer authentication required
+        await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+        setSearchParams(localVarUrlObj, localVarQueryParameter);
+        let headersFromBaseOptions =
+          baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        localVarRequestOptions.headers = {
+          ...localVarHeaderParameter,
+          ...headersFromBaseOptions,
+          ...options.headers,
+        };
 
-            // authentication Fictioneers API HTTP Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
+        return {
+          url: toPathString(localVarUrlObj),
+          options: localVarRequestOptions,
+        };
+      },
+    };
 };
 
 /**
@@ -2540,38 +3116,72 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 export const UsersApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
     return {
-        /**
-         * Create a new audience user for a Fictioneers powered experience.
-         * @summary Create new audience user
-         * @param {CreateUserDeserializer} createUserDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createUserV1UsersPost(createUserDeserializer: CreateUserDeserializer, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseSerializerUserSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserV1UsersPost(createUserDeserializer, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Delete the user and any user associated objects from the current timeline.
-         * @summary Delete current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteUserV1UsersMeDelete(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserV1UsersMeDelete(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * Retrieve detailed representation of the current user (and user story state).
-         * @summary Retrieve current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserMeV1UsersMeGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResponseSerializerUserSerializer>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserMeV1UsersMeGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
+      /**
+       * Create a new audience user for a Fictioneers powered experience.
+       * @summary Create new audience user
+       * @param {CreateUserRequest} createUserRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async createUserV1UsersPost(
+        createUserRequest: CreateUserRequest,
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.createUserV1UsersPost(
+            createUserRequest,
+            options
+          );
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Delete the user and any user associated objects from the current timeline.
+       * @summary Delete current user
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async deleteUserV1UsersMeDelete(
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.deleteUserV1UsersMeDelete(options);
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+      /**
+       * Retrieve detailed representation of the current user (and user story state).
+       * @summary Retrieve current user
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      async getUserMeV1UsersMeGet(
+        options?: AxiosRequestConfig
+      ): Promise<
+        (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
+      > {
+        const localVarAxiosArgs =
+          await localVarAxiosParamCreator.getUserMeV1UsersMeGet(options);
+        return createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        );
+      },
+    };
 };
 
 /**
@@ -2581,34 +3191,43 @@ export const UsersApiFp = function(configuration?: Configuration) {
 export const UsersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UsersApiFp(configuration)
     return {
-        /**
-         * Create a new audience user for a Fictioneers powered experience.
-         * @summary Create new audience user
-         * @param {CreateUserDeserializer} createUserDeserializer 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUserV1UsersPost(createUserDeserializer: CreateUserDeserializer, options?: any): AxiosPromise<ResponseSerializerUserSerializer> {
-            return localVarFp.createUserV1UsersPost(createUserDeserializer, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Delete the user and any user associated objects from the current timeline.
-         * @summary Delete current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserV1UsersMeDelete(options?: any): AxiosPromise<void> {
-            return localVarFp.deleteUserV1UsersMeDelete(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Retrieve detailed representation of the current user (and user story state).
-         * @summary Retrieve current user
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserMeV1UsersMeGet(options?: any): AxiosPromise<ResponseSerializerUserSerializer> {
-            return localVarFp.getUserMeV1UsersMeGet(options).then((request) => request(axios, basePath));
-        },
+      /**
+       * Create a new audience user for a Fictioneers powered experience.
+       * @summary Create new audience user
+       * @param {CreateUserRequest} createUserRequest
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      createUserV1UsersPost(
+        createUserRequest: CreateUserRequest,
+        options?: any
+      ): AxiosPromise<UserResponse> {
+        return localVarFp
+          .createUserV1UsersPost(createUserRequest, options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Delete the user and any user associated objects from the current timeline.
+       * @summary Delete current user
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      deleteUserV1UsersMeDelete(options?: any): AxiosPromise<void> {
+        return localVarFp
+          .deleteUserV1UsersMeDelete(options)
+          .then((request) => request(axios, basePath));
+      },
+      /**
+       * Retrieve detailed representation of the current user (and user story state).
+       * @summary Retrieve current user
+       * @param {*} [options] Override http request option.
+       * @throws {RequiredError}
+       */
+      getUserMeV1UsersMeGet(options?: any): AxiosPromise<UserResponse> {
+        return localVarFp
+          .getUserMeV1UsersMeGet(options)
+          .then((request) => request(axios, basePath));
+      },
     };
 };
 
@@ -2619,39 +3238,48 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
  * @extends {BaseAPI}
  */
 export class UsersApi extends BaseAPI {
-    /**
-     * Create a new audience user for a Fictioneers powered experience.
-     * @summary Create new audience user
-     * @param {CreateUserDeserializer} createUserDeserializer 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public createUserV1UsersPost(createUserDeserializer: CreateUserDeserializer, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).createUserV1UsersPost(createUserDeserializer, options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Create a new audience user for a Fictioneers powered experience.
+   * @summary Create new audience user
+   * @param {CreateUserRequest} createUserRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public createUserV1UsersPost(
+    createUserRequest: CreateUserRequest,
+    options?: AxiosRequestConfig
+  ) {
+    return UsersApiFp(this.configuration)
+      .createUserV1UsersPost(createUserRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * Delete the user and any user associated objects from the current timeline.
-     * @summary Delete current user
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public deleteUserV1UsersMeDelete(options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).deleteUserV1UsersMeDelete(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Delete the user and any user associated objects from the current timeline.
+   * @summary Delete current user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public deleteUserV1UsersMeDelete(options?: AxiosRequestConfig) {
+    return UsersApiFp(this.configuration)
+      .deleteUserV1UsersMeDelete(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 
-    /**
-     * Retrieve detailed representation of the current user (and user story state).
-     * @summary Retrieve current user
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public getUserMeV1UsersMeGet(options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).getUserMeV1UsersMeGet(options).then((request) => request(this.axios, this.basePath));
-    }
+  /**
+   * Retrieve detailed representation of the current user (and user story state).
+   * @summary Retrieve current user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public getUserMeV1UsersMeGet(options?: AxiosRequestConfig) {
+    return UsersApiFp(this.configuration)
+      .getUserMeV1UsersMeGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
 
 
