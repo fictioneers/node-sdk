@@ -91,4 +91,4 @@ All the events referenced on the users current timeline (irrespective of their c
 
 - `getTimelineEvents()` => `GET /timeline-events`
 
-For further information on these methods and the parameters, please view [the documentation](https://storage.googleapis.com/fictioneers-developer-docs/build/index.html)
+For further information on these methods and the parameters, please view [the documentation](https://docs.fictioneers.co.uk/)
