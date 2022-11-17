@@ -18,7 +18,7 @@ class Fictioneers {
         }
         
         if(!(this instanceof Fictioneers)){
-            return new Fictioneers(apiSecretKey, userId)
+            return new Fictioneers({ apiSecretKey, userId })
         }
 
         this.apiSecretKey = apiSecretKey
@@ -30,8 +30,6 @@ class Fictioneers {
 
     /**
      * generate and save a new ID Token which can be used to authenticate against the Audience APIs.
-     * @param {string} userId 
-     * @param {string} apiSecretKey 
      * @returns {object}
      */
     async getAccessToken() {
@@ -123,7 +121,7 @@ class Fictioneers {
 
     async _doFetch({url, method = "GET", auth = "bearer", body = null, additionalHeaders = [], deprecated = false}) {
         let headers
-        if(auth == "bearer"){
+        if(auth === "bearer"){
             headers = await this._getAuthHeadersBearer()
         } else {
             headers = this._getAuthHeaderSecretKey()
@@ -135,11 +133,11 @@ class Fictioneers {
             method: method,
             headers: headers
         }
-        if(method != "GET" && method != "HEAD" && method != "DELETE" && body){
+        if(method !== "GET" && method !== "HEAD" && method !== "DELETE" && body){
             request.body = JSON.stringify(body)
         }
         const response = await fetch(this._endpoint + url, request)
-        if(method == "DELETE"){
+        if(method === "DELETE"){
             return {
                 data: null,
                 error: response.error ? response.error : null,
@@ -156,7 +154,7 @@ class Fictioneers {
     }
 
     /* Admin */
-    /* Admin service to programatically manage timelines and timeline users. A secret API Key is required in the HTTP Authorization header. */
+    /* Admin service to programmatically manage timelines and timeline users. A secret API Key is required in the HTTP Authorization header. */
 
     /**
      * List all published timelines which users can be placed on.
