@@ -64,27 +64,6 @@ Methods relating to timeline events, as distinct from hooks.
 - `getUserTimelineEvents()` => `GET /user-timeline-events`
 - `updateUserTimelineEvent({timelineEventId, state})` => `PATCH /user-timeline-events/${timelineEventId}`
 
-## User timeline hooks ##
-
-Timeline hooks for the authenticated user.
-
-- `getUserTimelineHooks()` => `GET /user-timeline-hooks`
-
-## User interactables ##
-
-Interactables for the authenticated user.
-
-- `getUserInteractables()` => `GET /user-interactable`
-- `getUserInteractable({interactableId}) ` => `GET /user-interactables/${interactableId}`
-- `updateUserInteractable({interactableId, state})` => `PATCH /user-interactables/${interactableId}`
-
-##  Timeline interactables ##
-
-All the interactables referenced on the users current timeline (irrespective of their current position).
-
-- `getTimelineInteractables()` => `GET /timeline-interactables`
-- `getTimelineInteractable({interactableId})` => `GET /timeline-interactables/${interactableId}`
-
 ## Timeline events ##
 
 All the events referenced on the users current timeline (irrespective of their current posiiton).
