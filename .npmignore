@@ -1,7 +1,0 @@
-src/
-.idea/
-node_modules/
-*.iml
-*.tgz
-.eslintrc.cjs
-.prettierrc.json

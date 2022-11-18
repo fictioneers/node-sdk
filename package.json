@@ -2,14 +2,11 @@
   "name": "fictioneers-node-sdk",
   "version": "2.0.0",
   "description": "Server-side SDK wrapping the Fictioneers API",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "es2015": "./dist/esm2015/index.js",
-  "typings": "./dist/index.d.ts",
+  "type": "module",
+  "typings": "@types/index.d.ts",
+  "main": "src/index.js",
   "sideEffects": false,
   "scripts": {
-    "prepublish": "rm -rf dist && npm run build",
-    "build": "tsc && tsc --target es2018 --outDir dist/esm2015",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-api-types": "openapi-typescript https://api.fictioneers.co.uk/_docs/openapi --output ./src/openapi.ts"
   },
@@ -29,13 +26,15 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
-    "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0",
     "eslint": "8.22.0",
     "openapi-typescript": "^5.4.1",
-    "prettier": "^2.7.1",
-    "typescript": "^4.9.3"
-  }
+    "prettier": "^2.7.1"
+  },
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "files": [
+    "@types",
+    "src"
+  ]
 }
