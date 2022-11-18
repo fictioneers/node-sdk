@@ -1,15 +1,18 @@
 {
   "name": "fictioneers-node-sdk",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Server-side SDK wrapping the Fictioneers API",
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "es2015": "./dist/esm2015/index.js",
   "typings": "./dist/index.d.ts",
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prepublish": "rm -rf dist && npm run build",
-    "build": "tsc && tsc --target es2018 --outDir dist/esm2015",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-api-types": "openapi-typescript https://api.fictioneers.co.uk/_docs/openapi --output ./src/openapi.ts"
   },
