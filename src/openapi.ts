@@ -434,14 +434,14 @@ export interface components {
      */
     TokenResponse: {
       /**
-       * Primary Key
+       * Access Token
        * @description Access Token used to authenticate with Audience APIs.
        * @example ryJhbGciOiJSUzI1NiIsImtpZCI6IjQ7OTQ5ZDdkNDA3ZmVjOXIyYWM4ZDYzNWVjYmEwYjdhOTE0LWQ4ZmIiLCJ0eXAiOiJK
        */
       access_token: string;
       /**
        * Expires In
-       * @description Time in seconds until the ID Token expires.
+       * @description Time in seconds until the Access Token expires.
        * @example 3600
        */
       expires_in: number;
@@ -627,6 +627,18 @@ export interface components {
        */
       related_timeline_event_ids: string[];
       /**
+       * Unlocked By Timeline Event Id
+       * @description This event will be made AVAILABLE once the event in this field is COMPLETED or SKIPPED
+       * @example s1sad1DkWZephtcJDmtM
+       */
+      unlocked_by_timeline_event_id?: string | null;
+      /**
+       * Unlocks Timeline Event Id
+       * @description The event in this field will be made AVAILABLE once this event is COMPLETED or SKIPPED
+       * @example s1sad1DkWZephtcJDmtM
+       */
+      unlocks_timeline_event_id?: string | null;
+      /**
        * Available Step Index
        * @description Identifies the step index in which this event becomes available.
        * @example 1
@@ -729,7 +741,6 @@ export interface components {
       /** Meta */
       meta?: components["schemas"]["Meta"] | null;
     };
-
     /**
      * UserTimelineEventListResponse
      * @description Base serializer class for all list responses, inheriting error and metadata from
