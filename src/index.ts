@@ -12,6 +12,7 @@ import {
   User,
   UserResponse,
   UserStoryState,
+  UserStoryStateResponse,
   UserTimelineEventDetail,
   UserTimelineEventList,
 } from "./types";
@@ -470,7 +471,7 @@ class Fictioneers {
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieves-user-narrative-state
    */
-  async getUserStoryState(): Promise<UserStoryState> {
+  async getUserStoryState(): Promise<UserStoryStateResponse> {
     return this._doFetch({
       url: "/user-story-state",
     });
@@ -485,7 +486,7 @@ class Fictioneers {
     currentTimelineEventId,
   }: {
     currentTimelineEventId: string;
-  }): Promise<UserStoryState> {
+  }): Promise<UserStoryStateResponse> {
     return this._doFetch({
       url: "/user-story-state",
       method: "PATCH",
@@ -508,7 +509,7 @@ class Fictioneers {
   }: {
     maxSteps?: number | string | null;
     pauseAtBeats?: boolean;
-  }): Promise<UserStoryState> {
+  }): Promise<UserStoryStateResponse> {
     if (maxSteps !== null && typeof maxSteps == "string") {
       maxSteps = parseInt(maxSteps as string);
     }
