@@ -1,7 +1,8 @@
-# Fictioneers API: Node SDK
-This is a simple SDK for use when connecting to the Fictioneers API from the server-side.
+# Fictioneers API
+This is a simple SDK for use when connecting to the Fictioneers API from a browser or server-side application.
 
-To use, you require your Fictioneers secret key, and optionally, a user ID. If you do not provide a user ID, and the API call requires one, the SDK will create one for you, which you can retrieve either from the API response or from the SDK with `getUserId()`.
+To use, you require a Fictioneers API key, a Secret key should only be used by server-side apps and a Visible key can be used by client-side apps, and optionally, a user ID.
+If you do not provide a user ID, and the API call requires one, the SDK will create one for you, which you can retrieve either from the API response or from the SDK with `getUserId()`.
 
     const fictioneers = new Fictioneers({
         apiSecretKey: "s_xxxxx", // mandatory
@@ -30,7 +31,7 @@ The method `setAccessToken()` will both call `getAccessToken()` to generate a ne
 
 ## Admin ##
 
-Admin service to programatically manage timelines and timeline users. A secret API Key is required in the HTTP Authorization header.
+Admin service to programmatically manage timelines and timeline users. A Secret API Key is required in the HTTP Authorization header.
 
 - `getTimelines()` => `GET /timelines`
 - `getTimeline({timelineId})` => `GET /timelines/${timelineId}`
@@ -66,7 +67,7 @@ Methods relating to timeline events, as distinct from hooks.
 
 ## Timeline events ##
 
-All the events referenced on the users current timeline (irrespective of their current posiiton).
+All the events referenced on the users current timeline (irrespective of their current position).
 
 - `getTimelineEvents()` => `GET /timeline-events`
 
