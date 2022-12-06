@@ -11,11 +11,10 @@ import {
   TokenResponse,
   User,
   UserResponse,
-  UserStoryState,
   UserStoryStateResponse,
   UserTimelineEventDetail,
   UserTimelineEventList,
-} from "./types";
+} from "./types.js";
 
 class Fictioneers {
   private readonly apiSecretKey: string;
@@ -60,7 +59,7 @@ class Fictioneers {
    */
   async getAccessToken(): Promise<AccessTokenResponse> {
     const response = await axios.post(
-      this._endpoint + "/auth/token",
+      `${this._endpoint}/auth/token`,
       {
         user_id: this.userId,
       },
@@ -68,6 +67,7 @@ class Fictioneers {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          "Accept-Encoding": "application/json",
           Authorization: this.apiSecretKey,
         },
       }
@@ -135,6 +135,7 @@ class Fictioneers {
     return {
       "Content-Type": "application/json",
       Accept: "application/json",
+      "Accept-Encoding": "application/json",
       Authorization: this.apiSecretKey,
     };
   }
@@ -149,6 +150,7 @@ class Fictioneers {
     return {
       "Content-Type": "application/json",
       Accept: "application/json",
+      "Accept-Encoding": "application/json",
       Authorization: `Bearer ${this.accessToken}`,
     };
   }
@@ -557,5 +559,5 @@ class Fictioneers {
     });
   }
 }
-export * from "./types";
+export * from "./types.js";
 export default Fictioneers;
