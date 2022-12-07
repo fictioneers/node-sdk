@@ -1,12 +1,20 @@
-import fetch, { RequestInit, Response } from "node-fetch";
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { components } from "./openapi";
 import {
   AccessTokenResponse,
   DeleteResponse,
+  EventStateChange,
   InitialiseAndProgressUser,
   State,
-} from "./types";
+  Timeline,
+  TimelineEvent,
+  TokenResponse,
+  User,
+  UserResponse,
+  UserStoryStateResponse,
+  UserTimelineEventDetail,
+  UserTimelineEventList,
+} from "./types.js";
 
 class Fictioneers {
   private readonly apiSecretKey: string;
@@ -28,9 +36,9 @@ class Fictioneers {
     apiSecretKey: string;
     userId?: null | string;
   }) {
-    if (typeof window !== "undefined") {
-      throw new Error(
-        "This API is for server-side usage only. Your apiSecretKey should never be visible client-side."
+    if (apiSecretKey.indexOf("s_") === 0 && typeof window !== "undefined") {
+      console.warn(
+        "Warning: It looks like you're using a secret API key client-side, please consider using a visible API key"
       );
     }
 
@@ -50,20 +58,22 @@ class Fictioneers {
    * @returns {object}
    */
   async getAccessToken(): Promise<AccessTokenResponse> {
-    const response = await fetch(this._endpoint + "/auth/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: this.apiSecretKey,
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      `${this._endpoint}/auth/token`,
+      {
         user_id: this.userId,
-      }),
-    });
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Accept-Encoding": "application/json",
+          Authorization: this.apiSecretKey,
+        },
+      }
+    );
 
-    const accessToken =
-      (await response.json()) as components["schemas"]["TokenResponse"];
+    const accessToken = response.data as TokenResponse;
     this.accessToken = accessToken.access_token;
     return {
       accessToken: accessToken.access_token,
@@ -125,6 +135,7 @@ class Fictioneers {
     return {
       "Content-Type": "application/json",
       Accept: "application/json",
+      "Accept-Encoding": "application/json",
       Authorization: this.apiSecretKey,
     };
   }
@@ -139,6 +150,7 @@ class Fictioneers {
     return {
       "Content-Type": "application/json",
       Accept: "application/json",
+      "Accept-Encoding": "application/json",
       Authorization: `Bearer ${this.accessToken}`,
     };
   }
@@ -163,24 +175,35 @@ class Fictioneers {
       headers = this._getAuthHeaderSecretKey();
     }
 
-    const request: RequestInit = {
-      method: method,
-      headers: headers,
-    };
-    if ((method == "POST" || method == "PATCH") && body) {
-      request.body = JSON.stringify(body);
+    let response;
+    switch (method) {
+      case "POST":
+        response = await axios.post(this._endpoint + url, body || {}, {
+          headers,
+        });
+        break;
+      case "DELETE":
+        response = await axios.delete(this._endpoint + url, { headers });
+        break;
+      case "GET":
+        response = await axios.get(this._endpoint + url, { headers });
+        break;
+      case "PATCH":
+        response = await axios.patch(this._endpoint + url, body || {}, {
+          headers,
+        });
+        break;
     }
-    const response: Response = await fetch(this._endpoint + url, request);
     if (method === "DELETE") {
       return {
         data: null,
-        error: !response.ok ? response.statusText : null,
+        error: response.status >= 400 ? response.statusText : null,
         meta: null,
         status: 204,
       } as T;
     }
 
-    const r = (await response.json()) as any;
+    const r = response.data;
     if (deprecated && !Array.isArray(r)) {
       r.error =
         (r.error ? r.error : "") +
@@ -197,7 +220,7 @@ class Fictioneers {
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#list-all-published-timelines
    */
-  async getTimelines(): Promise<components["schemas"]["Timeline"][]> {
+  async getTimelines(): Promise<Timeline[]> {
     return this._doFetch({
       url: "/timelines",
       auth: "key",
@@ -210,11 +233,7 @@ class Fictioneers {
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieves-timeline
    */
-  async getTimeline({
-    timelineId,
-  }: {
-    timelineId: string;
-  }): Promise<components["schemas"]["Timeline"]> {
+  async getTimeline({ timelineId }: { timelineId: string }): Promise<Timeline> {
     return this._doFetch({
       url: `/timelines/${timelineId}`,
       auth: "key",
@@ -231,7 +250,7 @@ class Fictioneers {
     timelineId,
   }: {
     timelineId: string;
-  }): Promise<components["schemas"]["TimelineEvent"][]> {
+  }): Promise<TimelineEvent[]> {
     return this._doFetch({
       url: `/timelines/${timelineId}/timeline-events`,
       auth: "key",
@@ -248,7 +267,7 @@ class Fictioneers {
     timelineId,
   }: {
     timelineId: string;
-  }): Promise<components["schemas"]["User"][]> {
+  }): Promise<User[]> {
     return this._doFetch({
       url: `/timelines/${timelineId}/users`,
       auth: "key",
@@ -286,7 +305,7 @@ class Fictioneers {
   }: {
     timelineId: string;
     userId?: null | string;
-  }): Promise<components["schemas"]["User"]> {
+  }): Promise<User> {
     if (userId == null) {
       userId = this.userId;
     }
@@ -330,7 +349,7 @@ class Fictioneers {
     timelineId,
   }: {
     timelineId: string;
-  }): Promise<components["schemas"]["EventStateChange"][]> {
+  }): Promise<EventStateChange[]> {
     return this._doFetch({
       url: `/timelines/${timelineId}/event-state-changes/`,
       auth: "key",
@@ -345,7 +364,7 @@ class Fictioneers {
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieve-current-user
    */
-  async getUser(): Promise<components["schemas"]["UserResponse"]> {
+  async getUser(): Promise<UserResponse> {
     return this._doFetch({
       url: "/users/me",
     });
@@ -379,11 +398,11 @@ class Fictioneers {
     timelineId: string;
     disableTimeGuards?: boolean;
     pauseAtBeats?: boolean;
-  }): Promise<components["schemas"]["UserResponse"]> {
+  }): Promise<UserResponse> {
     // TODO - does the user exist already?
     // await this.getUser()
 
-    return this._doFetch<components["schemas"]["UserResponse"]>({
+    return this._doFetch<UserResponse>({
       url: "/users",
       method: "POST",
       body: {
@@ -454,9 +473,7 @@ class Fictioneers {
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieves-user-narrative-state
    */
-  async getUserStoryState(): Promise<
-    components["schemas"]["UserStoryStateResponse"]
-  > {
+  async getUserStoryState(): Promise<UserStoryStateResponse> {
     return this._doFetch({
       url: "/user-story-state",
     });
@@ -471,7 +488,7 @@ class Fictioneers {
     currentTimelineEventId,
   }: {
     currentTimelineEventId: string;
-  }): Promise<components["schemas"]["UserStoryStateResponse"]> {
+  }): Promise<UserStoryStateResponse> {
     return this._doFetch({
       url: "/user-story-state",
       method: "PATCH",
@@ -494,7 +511,7 @@ class Fictioneers {
   }: {
     maxSteps?: number | string | null;
     pauseAtBeats?: boolean;
-  }): Promise<components["schemas"]["UserStoryStateResponse"]> {
+  }): Promise<UserStoryStateResponse> {
     if (maxSteps !== null && typeof maxSteps == "string") {
       maxSteps = parseInt(maxSteps as string);
     }
@@ -514,9 +531,7 @@ class Fictioneers {
    * Gets all timeline events
    * @returns {Promise}
    */
-  async getUserTimelineEvents(): Promise<
-    components["schemas"]["UserTimelineEventListResponse"]
-  > {
+  async getUserTimelineEvents(): Promise<UserTimelineEventList> {
     return this._doFetch({
       url: "/user-timeline-events",
     });
@@ -534,7 +549,7 @@ class Fictioneers {
   }: {
     timelineEventId: string;
     state: State;
-  }): Promise<components["schemas"]["UserTimelineEventDetailResponse"]> {
+  }): Promise<UserTimelineEventDetail> {
     return this._doFetch({
       url: `/user-timeline-events/${timelineEventId}`,
       method: "PATCH",
@@ -544,5 +559,5 @@ class Fictioneers {
     });
   }
 }
-
+export * from "./types.js";
 export default Fictioneers;

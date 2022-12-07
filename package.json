@@ -1,14 +1,15 @@
 {
-  "name": "fictioneers-node-sdk",
-  "version": "2.0.1",
-  "description": "Server-side SDK wrapping the Fictioneers API",
+  "name": "fictioneers",
+  "version": "1.0.0",
+  "description": "API Client for interacting with the Fictioneers' APIs from either a browser-side or server-side application",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
     "prepublish": "rm -rf dist && npm run build",
@@ -28,10 +29,11 @@
   },
   "homepage": "https://github.com/fictioneers/node-sdk#readme",
   "dependencies": {
-    "node-fetch": "^3.2.1",
+    "axios": "^1.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/node": "^18.11.9",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
