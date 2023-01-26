@@ -49,11 +49,15 @@ export interface paths {
      * List endpoint for user timeline events ordered by step index (including events
      * in an INITIAL state).
      */
-    get: operations["list_timeline_events_for_user_v1_user_timeline_events_get"];
+    get: operations["list_user_timeline_events_v1_user_timeline_events_get"];
   };
-  "/v1/user-timeline-events/{timeline_event_id}": {
+  "/v1/user-timeline-events/{user_timeline_event_id}": {
     /** Patch endpoint for user timeline events. */
-    patch: operations["update_user_timeline_event_v1_user_timeline_events__timeline_event_id__patch"];
+    patch: operations["update_user_timeline_event_v1_user_timeline_events__user_timeline_event_id__patch"];
+  };
+  "/v1/user-timeline-events/{user_timeline_event_id}/follow-link": {
+    /** Update the state of the current event to COMPLETED and make the target of the link AVAILABLE (if it has also been reached by step based progression). */
+    post: operations["follow_link_v1_user_timeline_events__user_timeline_event_id__follow_link_post"];
   };
   "/v1/user-timeline-event-state-changes": {
     /**
@@ -69,6 +73,16 @@ export interface paths {
   "/v1/timelines/{timeline_id}": {
     /** Representation of a single timeline. */
     get: operations["get_timeline_v1_timelines__timeline_id__get"];
+  };
+  "/v1/timelines/{timeline_id}/variables": {
+    /** Lists all variables with their default and current values. */
+    get: operations["list_timeline_variables_v1_timelines__timeline_id__variables_get"];
+  };
+  "/v1/timelines/{timeline_id}/variables/{name}": {
+    /** Detail representation of a single timeline variable. */
+    get: operations["detail_timeline_variable_v1_timelines__timeline_id__variables__name__get"];
+    /** Update the value of a shared timeline variable. */
+    patch: operations["update_timeline_variable_v1_timelines__timeline_id__variables__name__patch"];
   };
   "/v1/timelines/{timeline_id}/timeline-events": {
     /** Lists all timeline events on a specific timeline. */
@@ -135,20 +149,17 @@ export interface components {
     };
     /**
      * CreateUserRequest
-     * @description Used when creating a new user entity.
-     *
-     * The timeline ID and timezone is explicitly provided by the client - while the user
-     * email address and other mandatory fields are extracted from the verified JWT token
-     * sent in the authorization header.
+     * @description Data required when creating a new audience user.
      */
     CreateUserRequest: {
       /**
-       * Timeline ID the user should be placed on
+       * Published Timeline Id
+       * @description Published Timeline ID which the created user should be placed on
        * @example 5UNDJoOUBDfSoMlW97a
        */
       published_timeline_id: string;
       /**
-       * Timezone for the narrative story progression system
+       * Timezone used for time based progression conditions
        * @example Europe/London
        */
       timezone: string;
@@ -202,13 +213,17 @@ export interface components {
       created_at: string;
     };
     /**
+     * FollowLinkRequest
+     * @description Follow a link from a user timeline event via command.
+     */
+    FollowLinkRequest: {
+      /** Link Id */
+      link_id: string;
+    };
+    /**
      * GeneralError
-     * @description Base serializer class for any errors which can be included in a response. This is
-     * used by the Response serializer class.
-     *
-     * If an error is returned, there should be no data in the response (although we are
-     * working on the presumption that metadata may still come back). This is
-     * handled in the Response serializer validator.
+     * @description Provides details around errors and problems encountered while performing an
+     * HTTP operation.
      */
     GeneralError: {
       /** Detail */
@@ -223,14 +238,14 @@ export interface components {
     };
     /**
      * Meta
-     * @description Base serializer class for all metadata which can be included in a response. This is
-     * used by the Response serializer class.
+     * @description Provides meta information related to the HTTP request.
      *
-     * This design pattern afford us the ability to include any generic meta data within
-     * this block. For example achievements completed as a bi-product of another action,
-     * or cursor/pagination/count metadata you might expect on a list endpoint.
+     * When progressing an audience user narrative state this includes all timeline
+     * events which have been created or update, to avoid a subsequent HTTP request
+     * to the API.
      */
     Meta: {
+      user_story_state?: components["schemas"]["UserStoryState"];
       /**
        * Changed Timeline Events
        * @default []
@@ -254,19 +269,12 @@ export interface components {
     NarrativeEventType: "SIMPLE" | "ACTIVITY" | "CONSUMABLE";
     /**
      * ProgressEventsRequest
-     * @description Deserializer used on the progress events RPC endpoint which invokes the execution
-     * of the beat machine.
-     *
-     * The optional `max_steps` field provides a way for the integration engineer to
-     * control this execution context.
-     *
-     * The optional `pause_at_beats` field provides a way to override the user level
-     * `pause_at_beats` configuration.
+     * @description Inputs to use when progressing an audience user along the timeline.
      */
     ProgressEventsRequest: {
       /**
        * Max Steps
-       * @description The maximum amount of steps that should be progressed
+       * @description The maximum amount of steps that should be progressed. Use `null` to progress until you meet a blocking condition.
        * @example 1
        */
       max_steps?: number;
@@ -361,20 +369,16 @@ export interface components {
       narrative_event_custom_data?: { [key: string]: string };
     };
     /**
-     * TokenIntrospectRequest
-     * @description Instead of our serializer level objects inheriting from BaseModel, they
-     * should all inherit from BaseSerializer, which removes the burden of handling the
-     * lookup of a entity key identifiers within our API view logic.
-     *
-     * By enabling ORM_MODE we can pass in schema objects, and Pydantic will do a
-     * __getattr__ style lookup, which will auto unpack the primary key from our
-     * BaseSchema inherited object.
-     *
-     * We also have a thin wrapper around the __init__, which helps to provide a nicer API
-     * when unpacking the results of projection queries into our resource serializers. This
-     * can be used in conjunction with the `get_projection_properties` helper to get all
-     * entity property names from the datastore index.
+     * TimelineEventLink
+     * @description Represents a links between two timeline events.
      */
+    TimelineEventLink: {
+      /** Id */
+      id: string;
+      /** To Event Id */
+      to_event_id: string;
+    };
+    /** TokenIntrospectRequest */
     TokenIntrospectRequest: {
       /**
        * Access Token
@@ -417,39 +421,33 @@ export interface components {
        */
       user_id: string;
     };
-    /**
-     * TokenResponse
-     * @description Instead of our serializer level objects inheriting from BaseModel, they
-     * should all inherit from BaseSerializer, which removes the burden of handling the
-     * lookup of a entity key identifiers within our API view logic.
-     *
-     * By enabling ORM_MODE we can pass in schema objects, and Pydantic will do a
-     * __getattr__ style lookup, which will auto unpack the primary key from our
-     * BaseSchema inherited object.
-     *
-     * We also have a thin wrapper around the __init__, which helps to provide a nicer API
-     * when unpacking the results of projection queries into our resource serializers. This
-     * can be used in conjunction with the `get_projection_properties` helper to get all
-     * entity property names from the datastore index.
-     */
+    /** TokenResponse */
     TokenResponse: {
       /**
-       * Primary Key
+       * Access Token
        * @description Access Token used to authenticate with Audience APIs.
        * @example ryJhbGciOiJSUzI1NiIsImtpZCI6IjQ7OTQ5ZDdkNDA3ZmVjOXIyYWM4ZDYzNWVjYmEwYjdhOTE0LWQ4ZmIiLCJ0eXAiOiJK
        */
       access_token: string;
       /**
        * Expires In
-       * @description Time in seconds until the ID Token expires.
+       * @description Time in seconds until the Access Token expires.
        * @example 3600
        */
       expires_in: number;
     };
+    /** UpdateVariableValue */
+    UpdateVariableValue: {
+      /**
+       * Value
+       * @description New variable value
+       * @example 200
+       */
+      value: number;
+    };
     /**
      * User
-     * @description Representation of a user - including a mix of their authentication and experience
-     * based properties. This should be considered a read-only serializer.
+     * @description API representation of an audience user on a specific timeline.
      */
     User: {
       /**
@@ -477,7 +475,7 @@ export interface components {
       | "CONSUMED";
     /**
      * UserResponse
-     * @description Base serializer class for all responses.
+     * @description Base response shape for all single resource Audience API responses.
      */
     UserResponse: {
       data?: components["schemas"]["User"];
@@ -488,10 +486,18 @@ export interface components {
     };
     /**
      * UserStoryState
-     * @description Contains information an integrating client can leverage to elegantly represent and
-     * progress the user narrative.
+     * @description Represents an audience user state and position.
      */
     UserStoryState: {
+      /**
+       * Variables
+       * @description User level variable values
+       * @example {
+       *   "points": 100,
+       *   "level": 3
+       * }
+       */
+      variables: { [key: string]: number };
       /**
        * Current Step
        * @description Current step index for user in event delivery sequence
@@ -570,7 +576,7 @@ export interface components {
     };
     /**
      * UserStoryStateResponse
-     * @description Base serializer class for all responses.
+     * @description Base response shape for all single resource Audience API responses.
      */
     UserStoryStateResponse: {
       data?: components["schemas"]["UserStoryState"];
@@ -626,6 +632,11 @@ export interface components {
        * ]
        */
       related_timeline_event_ids: string[];
+      /**
+       * Links
+       * @description Array of link resources which define which event are unlocked once this event is COMPLETED or SKIPPED for an activity, or AVAILABLE for a simple event.
+       */
+      links: components["schemas"]["TimelineEventLink"][];
       /**
        * Available Step Index
        * @description Identifies the step index in which this event becomes available.
@@ -720,7 +731,7 @@ export interface components {
     };
     /**
      * UserTimelineEventDetailResponse
-     * @description Base serializer class for all responses.
+     * @description Base response shape for all single resource Audience API responses.
      */
     UserTimelineEventDetailResponse: {
       data?: components["schemas"]["UserTimelineEvent"];
@@ -729,11 +740,9 @@ export interface components {
       /** Meta */
       meta?: components["schemas"]["Meta"] | null;
     };
-
     /**
      * UserTimelineEventListResponse
-     * @description Base serializer class for all list responses, inheriting error and metadata from
-     * Response serializer.
+     * @description Base response shape for all multiple resource Audience API responses.
      */
     UserTimelineEventListResponse: {
       /** Data */
@@ -832,8 +841,7 @@ export interface components {
     };
     /**
      * UserTimelineEventStateChangeListResponse
-     * @description Base serializer class for all list responses, inheriting error and metadata from
-     * Response serializer.
+     * @description Base response shape for all multiple resource Audience API responses.
      */
     UserTimelineEventStateChangeListResponse: {
       /** Data */
@@ -852,6 +860,41 @@ export interface components {
       /** Error Type */
       type: string;
     };
+    /**
+     * Variable
+     * @description API representation of a timeline variable.
+     */
+    Variable: {
+      /**
+       * Name
+       * @example coins
+       */
+      name: string;
+      /** @example shared */
+      scope: components["schemas"]["VariableScope"];
+      /**
+       * Default Value
+       * @example 100
+       */
+      default_value: number;
+      /**
+       * Value
+       * @description Current value of the variable. For user scoped variables this is always None - see an individual user API response for each unique value.
+       * @example Find the flag!
+       */
+      value?: number;
+    };
+    /**
+     * VariableScope
+     * @description
+     *     The scope of a variable.
+     *
+     *     User values are specific to a single user, shared values are across
+     *     all users on a timeline.
+     *
+     * @enum {string}
+     */
+    VariableScope: "user" | "shared";
   };
 }
 
@@ -1066,16 +1109,16 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Service Unavailable - Potentially due to contention. */
+      409: {
+        content: {
+          "application/json": unknown;
+        };
+      };
       /** Validation Error */
       422: {
         content: {
           "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-      /** Service Unavailable - Potentially due to contention. */
-      503: {
-        content: {
-          "application/json": unknown;
         };
       };
     };
@@ -1089,7 +1132,7 @@ export interface operations {
    * List endpoint for user timeline events ordered by step index (including events
    * in an INITIAL state).
    */
-  list_timeline_events_for_user_v1_user_timeline_events_get: {
+  list_user_timeline_events_v1_user_timeline_events_get: {
     responses: {
       /** Successful Response */
       200: {
@@ -1112,10 +1155,10 @@ export interface operations {
     };
   };
   /** Patch endpoint for user timeline events. */
-  update_user_timeline_event_v1_user_timeline_events__timeline_event_id__patch: {
+  update_user_timeline_event_v1_user_timeline_events__user_timeline_event_id__patch: {
     parameters: {
       path: {
-        timeline_event_id: string;
+        user_timeline_event_id: string;
       };
     };
     responses: {
@@ -1137,22 +1180,67 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Service Unavailable - Potentially due to contention. */
+      409: {
+        content: {
+          "application/json": unknown;
+        };
+      };
       /** Validation Error */
       422: {
         content: {
           "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
-      /** Service Unavailable - Potentially due to contention. */
-      503: {
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UserTimelineEventRequest"];
+      };
+    };
+  };
+  /** Update the state of the current event to COMPLETED and make the target of the link AVAILABLE (if it has also been reached by step based progression). */
+  follow_link_v1_user_timeline_events__user_timeline_event_id__follow_link_post: {
+    parameters: {
+      path: {
+        user_timeline_event_id: string;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserTimelineEventDetailResponse"];
+        };
+      };
+      /** Authentication Required */
+      401: {
         content: {
           "application/json": unknown;
+        };
+      };
+      /** Forbidden */
+      403: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** Service Unavailable - Potentially due to contention. */
+      409: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UserTimelineEventRequest"];
+        "application/json": components["schemas"]["FollowLinkRequest"];
       };
     };
   };
@@ -1223,6 +1311,85 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["HTTPValidationError"];
         };
+      };
+    };
+  };
+  /** Lists all variables with their default and current values. */
+  list_timeline_variables_v1_timelines__timeline_id__variables_get: {
+    parameters: {
+      path: {
+        timeline_id: string;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Variable"][];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Detail representation of a single timeline variable. */
+  detail_timeline_variable_v1_timelines__timeline_id__variables__name__get: {
+    parameters: {
+      path: {
+        timeline_id: string;
+        name: string;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Variable"];
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Update the value of a shared timeline variable. */
+  update_timeline_variable_v1_timelines__timeline_id__variables__name__patch: {
+    parameters: {
+      path: {
+        timeline_id: string;
+        name: string;
+      };
+    };
+    responses: {
+      /** Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Variable"];
+        };
+      };
+      /** Service Unavailable - Potentially due to contention. */
+      409: {
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateVariableValue"];
       };
     };
   };

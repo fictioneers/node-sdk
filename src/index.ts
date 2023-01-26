@@ -558,6 +558,28 @@ class Fictioneers {
       },
     });
   }
+
+  /**
+   * Marks a timeline event as COMPLETED (aka visited), and marks the target event as AVAILABLE (if it has been reached by step based progression)
+   * @param {string} timelineEventId
+   * @param {string} linkId
+   * @returns {Promise}
+   */
+  async followLinkUserTimelineEvent({
+    timelineEventId,
+    linkId,
+  }: {
+    timelineEventId: string;
+    linkId: string;
+  }): Promise<UserTimelineEventDetail> {
+    return this._doFetch({
+      url: `/user-timeline-events/${timelineEventId}/follow-link`,
+      method: "POST",
+      body: {
+        link_id: linkId,
+      },
+    });
+  }
 }
 export * from "./types.js";
 export default Fictioneers;
