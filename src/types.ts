@@ -20,7 +20,7 @@ export type GeneralError = components["schemas"]["GeneralError"];
 export type Meta = components["schemas"]["Meta"];
 export type Beat = components["schemas"]["Beat"];
 export type UserTimelineEventState =
-  components["schemas"]["UserTimelineEventState"];
+  components["schemas"]["NewUserTimelineEventState"];
 export type UserInvokedTimelineEventState =
   components["schemas"]["UserInvokedTimelineEventState"];
 export type UserTimelineEventStateChange =
