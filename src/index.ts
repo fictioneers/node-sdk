@@ -449,16 +449,6 @@ class Fictioneers {
     // next get their timeline events
     const userTimelineEventsResponse = await this.getUserTimelineEvents();
     const userTimelineEvents = userTimelineEventsResponse.data || [];
-    // next put them on the timeline if not already
-    if (
-      userStoryState?.current_timeline_event_id == null &&
-      userTimelineEvents.length > 0
-    ) {
-      const updateUserStoryStateResponse = await this.updateUserStoryState({
-        currentTimelineEventId: userTimelineEvents[0].id,
-      });
-      userStoryState = updateUserStoryStateResponse.data;
-    }
     return {
       userStoryState: userStoryState,
       userTimelineEvents: userTimelineEvents,
@@ -476,25 +466,6 @@ class Fictioneers {
   async getUserStoryState(): Promise<UserStoryStateResponse> {
     return this._doFetch({
       url: "/user-story-state",
-    });
-  }
-
-  /**
-   * Updates current timeline event ID
-   * @param {string} currentTimelineEventId
-   * @returns {Promise}
-   */
-  async updateUserStoryState({
-    currentTimelineEventId,
-  }: {
-    currentTimelineEventId: string;
-  }): Promise<UserStoryStateResponse> {
-    return this._doFetch({
-      url: "/user-story-state",
-      method: "PATCH",
-      body: {
-        current_timeline_event_id: currentTimelineEventId,
-      },
     });
   }
 
