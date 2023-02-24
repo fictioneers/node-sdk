@@ -55,7 +55,6 @@ User from the authentication token.
 Methods relating to the user's story state
 
 - `getUserStoryState()` => `GET /user-story-state`
-- `updateUserStoryState({currentTimelineEventId})` => `PATCH /user-story-state`
 - `progressUserStoryStateEvents({maxSteps = null, pauseAtBeats = true})` => `POST /user-story-state/progress-events`
 
 ## User timeline events ##
@@ -63,7 +62,6 @@ Methods relating to the user's story state
 Methods relating to timeline events, as distinct from hooks.
 
 - `getUserTimelineEvents()` => `GET /user-timeline-events`
-- `updateUserTimelineEvent({timelineEventId, state})` => `PATCH /user-timeline-events/${timelineEventId}`
 
 ## Timeline events ##
 
