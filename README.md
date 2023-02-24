@@ -29,7 +29,32 @@ The method `getAccessToken()` is used internally by the SDK, so you shouldn't ne
 
 The method `setAccessToken()` will both call `getAccessToken()` to generate a new access token and reset the access token within the SDK, if the SDK's current access token is either not present or has expired. Again, you shouldn't normally need to use this method.
 
-## Admin ##
+## Users ##
+
+User from the authentication token.
+
+- `getUser({includeNarrativeState = false})` => `GET /users/me`
+- `deleteUser()` => `DELETE /users/me`
+- `createUser({timelineId, disableTimeGuards = false, pauseAtBeats = false})` => `POST /users`
+
+## User story state ##
+
+Methods relating to the user's story state
+
+- `getUserStoryState()` => `GET /user-story-state`
+- `progressUserStoryStateStep({maxSteps = null, pauseAtBeats = true})` => `POST /user-story-state/progress-steps`
+
+## User timeline events ##
+
+Methods relating to user timeline events.
+
+- `getUserTimelineEvents()` => `GET /user-timeline-events`
+- `followLinkUserTimelineEvent({timelineEventId, linkId})` => `POST /user-timeline-events/follow-link`
+
+
+For further information on these methods and the parameters, please view [the documentation](https://docs.fictioneers.co.uk/)
+
+## Admin API ##
 
 Admin service to programmatically manage timelines and timeline users. A Secret API Key is required in the HTTP Authorization header.
 
@@ -40,35 +65,3 @@ Admin service to programmatically manage timelines and timeline users. A Secret 
 - `getTimelineUser({timelineId, userId = null})` => `GET /timelines/${timelineId}/users/${userId}`
 - `deleteTimelineUser({timelineId, userId = null})` => `DELETE /timelines/${timelineId}/users/${userId}`
 - `getTimelineEventStateChanges({timelineId})` => `GET /timelines/${timelineId}/event-state-changes/`
-
-## Users ##
-
-User from the authentication token.
-
-- `getUser({includeNarrativeState = false})` => `GET /users/me`
-- `deleteUser()` => `DELETE /users/me`
-- `updateUser({displayName})` => `PATCH /users/me`
-- `createUser({timelineId, disableTimeGuards = false, pauseAtBeats = false})` => `POST /users`
-
-## User story state ##
-
-Methods relating to the user's story state
-
-- `getUserStoryState()` => `GET /user-story-state`
-- `updateUserStoryState({currentTimelineEventId})` => `PATCH /user-story-state`
-- `progressUserStoryStateEvents({maxSteps = null, pauseAtBeats = true})` => `POST /user-story-state/progress-events`
-
-## User timeline events ##
-
-Methods relating to timeline events, as distinct from hooks.
-
-- `getUserTimelineEvents()` => `GET /user-timeline-events`
-- `updateUserTimelineEvent({timelineEventId, state})` => `PATCH /user-timeline-events/${timelineEventId}`
-
-## Timeline events ##
-
-All the events referenced on the users current timeline (irrespective of their current position).
-
-- `getTimelineEvents()` => `GET /timeline-events`
-
-For further information on these methods and the parameters, please view [the documentation](https://docs.fictioneers.co.uk/)

@@ -20,9 +20,7 @@ export type GeneralError = components["schemas"]["GeneralError"];
 export type Meta = components["schemas"]["Meta"];
 export type Beat = components["schemas"]["Beat"];
 export type UserTimelineEventState =
-  components["schemas"]["UserTimelineEventState"];
-export type UserInvokedTimelineEventState =
-  components["schemas"]["UserInvokedTimelineEventState"];
+  components["schemas"]["NewUserTimelineEventState"];
 export type UserTimelineEventStateChange =
   components["schemas"]["UserTimelineEventStateChange"];
 export type ServiceStatus = components["schemas"]["ServiceStatus"];
@@ -43,5 +41,3 @@ export interface InitialiseAndProgressUser {
   userStoryState?: components["schemas"]["UserStoryState"] | null;
   userTimelineEvents: components["schemas"]["UserTimelineEvent"][];
 }
-
-export type State = components["schemas"]["UserInvokedTimelineEventState"];
