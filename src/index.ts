@@ -393,10 +393,12 @@ class Fictioneers {
     timelineId,
     disableTimeGuards = false,
     pauseAtBeats = false,
+    maxSteps = null,
   }: {
     timelineId: string;
     disableTimeGuards?: boolean;
     pauseAtBeats?: boolean;
+    maxSteps? : number | null;
   }): Promise<UserResponse> {
     // TODO - does the user exist already?
     // await this.getUser()
@@ -409,6 +411,7 @@ class Fictioneers {
         timezone: "Europe/London",
         disable_time_guards: disableTimeGuards,
         pause_at_beats: pauseAtBeats,
+        max_steps: maxSteps,
       },
     });
   }
@@ -433,18 +436,14 @@ class Fictioneers {
         timelineId,
         disableTimeGuards,
         pauseAtBeats,
+        maxSteps,
       });
       userStoryState = createUserResponse.data?.narrative_state;
     } else {
       const getUserStoryStateResponse = await this.getUserStoryState();
       userStoryState = getUserStoryStateResponse.data;
     }
-    // progress the story state if they have just started:
-    if (userStoryState?.current_step == null) {
-      const progressUserStoryStateStepResponse =
-        await this.progressUserStoryStateStep({ maxSteps, pauseAtBeats });
-      userStoryState = progressUserStoryStateStepResponse.data;
-    }
+
     // next get their timeline events
     const userTimelineEventsResponse = await this.getUserTimelineEvents();
     const userTimelineEvents = userTimelineEventsResponse.data || [];

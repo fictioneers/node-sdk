@@ -203,6 +203,11 @@ export interface components {
        * @example false
        */
       pause_at_beats?: boolean;
+      /**
+       * Max Steps
+       * @description The maximum amount of steps that should be progressed. Use `null` to progress until you meet a blocking condition.
+       */
+      max_steps?: number;
     };
     /**
      * EventStateChange
