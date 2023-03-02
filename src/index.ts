@@ -16,7 +16,7 @@ import {
 } from "./types.js";
 
 class Fictioneers {
-  private readonly apiSecretKey: string;
+  private readonly apiKey: string;
   private userId: string;
   private accessToken: string | null;
   private accessTokenExpiry: null | number;
@@ -26,15 +26,15 @@ class Fictioneers {
    * A lightweight SDK interface to the Fictioneers API
    */
   constructor({
-    apiSecretKey,
+    apiKey,
     userId = null,
     apiVersion = "1",
   }: {
-    apiSecretKey: string;
+    apiKey: string;
     userId?: null | string;
     apiVersion?: string;
   }) {
-    if (apiSecretKey.indexOf("s_") === 0 && typeof window !== "undefined") {
+    if (apiKey.indexOf("s_") === 0 && typeof window !== "undefined") {
       console.warn(
         "Warning: It looks like you're using a secret API key client-side, please consider using a visible API key"
       );
@@ -44,7 +44,7 @@ class Fictioneers {
       userId = Fictioneers._uuidv4();
     }
 
-    this.apiSecretKey = apiSecretKey;
+    this.apiKey = apiKey;
     this.userId = userId;
     this.accessToken = null; // only create this the first time when needed
     this.accessTokenExpiry = null;
@@ -66,7 +66,7 @@ class Fictioneers {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Encoding": "application/json",
-          Authorization: this.apiSecretKey,
+          Authorization: this.apiKey,
         },
       }
     );
@@ -134,7 +134,7 @@ class Fictioneers {
       "Content-Type": "application/json",
       Accept: "application/json",
       "Accept-Encoding": "application/json",
-      Authorization: this.apiSecretKey,
+      Authorization: this.apiKey,
     };
   }
 
