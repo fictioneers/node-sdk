@@ -5,19 +5,18 @@ import {
   DeleteResponse,
   EventStateChange,
   InitialiseAndProgressUser,
-  State,
   Timeline,
   TimelineEvent,
   TokenResponse,
   User,
   UserResponse,
   UserStoryStateResponse,
-  UserTimelineEventDetail,
   UserTimelineEventList,
+  UserTimelineEventDetail,
 } from "./types.js";
 
 class Fictioneers {
-  private readonly apiSecretKey: string;
+  private readonly apiKey: string;
   private userId: string;
   private accessToken: string | null;
   private accessTokenExpiry: null | number;
@@ -25,18 +24,17 @@ class Fictioneers {
 
   /**
    * A lightweight SDK interface to the Fictioneers API
-   * @param {string} apiSecretKey
-   * @param {(null|string)} userId
-   * @returns {object}
    */
   constructor({
-    apiSecretKey,
+    apiKey,
     userId = null,
+    apiVersion = "1",
   }: {
-    apiSecretKey: string;
+    apiKey: string;
     userId?: null | string;
+    apiVersion?: string;
   }) {
-    if (apiSecretKey.indexOf("s_") === 0 && typeof window !== "undefined") {
+    if (apiKey.indexOf("s_") === 0 && typeof window !== "undefined") {
       console.warn(
         "Warning: It looks like you're using a secret API key client-side, please consider using a visible API key"
       );
@@ -46,11 +44,11 @@ class Fictioneers {
       userId = Fictioneers._uuidv4();
     }
 
-    this.apiSecretKey = apiSecretKey;
+    this.apiKey = apiKey;
     this.userId = userId;
     this.accessToken = null; // only create this the first time when needed
     this.accessTokenExpiry = null;
-    this._endpoint = "https://api.fictioneers.co.uk/v1";
+    this._endpoint = `https://api.fictioneers.co.uk/v${apiVersion}`;
   }
 
   /**
@@ -68,7 +66,7 @@ class Fictioneers {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Encoding": "application/json",
-          Authorization: this.apiSecretKey,
+          Authorization: this.apiKey,
         },
       }
     );
@@ -90,7 +88,7 @@ class Fictioneers {
   };
 
   /**
-   * If necessary, generate and save a new ID Token which can be used to authenticate against the Audience APIs.
+   * If necessary, generate and save a new access token which can be used to authenticate against the Audience APIs.
    * @returns {object}
    */
   async setAccessToken(): Promise<AccessTokenResponse> {
@@ -136,7 +134,7 @@ class Fictioneers {
       "Content-Type": "application/json",
       Accept: "application/json",
       "Accept-Encoding": "application/json",
-      Authorization: this.apiSecretKey,
+      Authorization: this.apiKey,
     };
   }
 
@@ -394,10 +392,12 @@ class Fictioneers {
     timelineId,
     disableTimeGuards = false,
     pauseAtBeats = false,
+    maxSteps = null,
   }: {
     timelineId: string;
     disableTimeGuards?: boolean;
     pauseAtBeats?: boolean;
+    maxSteps? : number | null;
   }): Promise<UserResponse> {
     // TODO - does the user exist already?
     // await this.getUser()
@@ -410,6 +410,7 @@ class Fictioneers {
         timezone: "Europe/London",
         disable_time_guards: disableTimeGuards,
         pause_at_beats: pauseAtBeats,
+        max_steps: maxSteps,
       },
     });
   }
@@ -434,18 +435,14 @@ class Fictioneers {
         timelineId,
         disableTimeGuards,
         pauseAtBeats,
+        maxSteps,
       });
       userStoryState = createUserResponse.data?.narrative_state;
     } else {
       const getUserStoryStateResponse = await this.getUserStoryState();
       userStoryState = getUserStoryStateResponse.data;
     }
-    // progress the story state if they have just started:
-    if (userStoryState?.current_step == null) {
-      const progressUserStoryStateEventsResponse =
-        await this.progressUserStoryStateEvents({ maxSteps, pauseAtBeats });
-      userStoryState = progressUserStoryStateEventsResponse.data;
-    }
+
     // next get their timeline events
     const userTimelineEventsResponse = await this.getUserTimelineEvents();
     const userTimelineEvents = userTimelineEventsResponse.data || [];
@@ -470,13 +467,13 @@ class Fictioneers {
   }
 
   /**
-   * Progress events based on the authenticated user available transition events.
+   * Progress user step position along the timeline.
    * @param {(null|number)} maxSteps
    * @param {boolean} pauseAtBeats
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#progress-timeline-events
    */
-  async progressUserStoryStateEvents({
+  async progressUserStoryStateStep({
     maxSteps = null,
     pauseAtBeats = true,
   }: {
@@ -487,7 +484,7 @@ class Fictioneers {
       maxSteps = parseInt(maxSteps as string);
     }
     return this._doFetch({
-      url: "/user-story-state/progress-events",
+      url: "/user-story-state/progress-step",
       method: "POST",
       body: {
         max_steps: maxSteps,
@@ -499,7 +496,7 @@ class Fictioneers {
   /* User timeline events */
 
   /**
-   * Gets all timeline events
+   * Gets all user timeline events
    * @returns {Promise}
    */
   async getUserTimelineEvents(): Promise<UserTimelineEventList> {
@@ -507,29 +504,6 @@ class Fictioneers {
       url: "/user-timeline-events",
     });
   }
-
-  /**
-   * Marks a timeline event as COMPLETED (aka visited), or another state
-   * @param {string} timelineEventId
-   * @param {string} state
-   * @returns {Promise}
-   */
-  async updateUserTimelineEvent({
-    timelineEventId,
-    state,
-  }: {
-    timelineEventId: string;
-    state: State;
-  }): Promise<UserTimelineEventDetail> {
-    return this._doFetch({
-      url: `/user-timeline-events/${timelineEventId}`,
-      method: "PATCH",
-      body: {
-        state: state,
-      },
-    });
-  }
-
   /**
    * Marks a timeline event as COMPLETED (aka visited), and marks the target event as AVAILABLE (if it has been reached by step based progression)
    * @param {string} timelineEventId
@@ -552,5 +526,6 @@ class Fictioneers {
     });
   }
 }
+
 export * from "./types.js";
 export default Fictioneers;
