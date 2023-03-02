@@ -24,16 +24,15 @@ class Fictioneers {
 
   /**
    * A lightweight SDK interface to the Fictioneers API
-   * @param {string} apiSecretKey
-   * @param {(null|string)} userId
-   * @returns {object}
    */
   constructor({
     apiSecretKey,
     userId = null,
+    apiVersion = "1",
   }: {
     apiSecretKey: string;
     userId?: null | string;
+    apiVersion?: string;
   }) {
     if (apiSecretKey.indexOf("s_") === 0 && typeof window !== "undefined") {
       console.warn(
@@ -49,7 +48,7 @@ class Fictioneers {
     this.userId = userId;
     this.accessToken = null; // only create this the first time when needed
     this.accessTokenExpiry = null;
-    this._endpoint = "https://api.fictioneers.co.uk/v1";
+    this._endpoint = `https://api.fictioneers.co.uk/v${apiVersion}`;
   }
 
   /**
