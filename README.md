@@ -5,7 +5,7 @@ To use, you require a Fictioneers API key, a Secret key should only be used by s
 If you do not provide a user ID, and the API call requires one, the SDK will create one for you, which you can retrieve either from the API response or from the SDK with `getUserId()`.
 
     const fictioneers = new Fictioneers({
-        apiSecretKey: "s_xxxxx", // mandatory
+        apiKey: "s_xxxxx", // mandatory
         userId: "1234-5678" // optional
     })
 
