@@ -5,9 +5,6 @@ export type TimelineEvent = components["schemas"]["TimelineEvent"];
 export type User = components["schemas"]["User"];
 export type EventStateChange = components["schemas"]["EventStateChange"];
 export type UserResponse = components["schemas"]["UserResponse"];
-export type UserStoryStateResponse =
-  components["schemas"]["UserStoryStateResponse"];
-export type UserStoryState = components["schemas"]["UserStoryState"];
 export type UserTimelineEventList =
   components["schemas"]["UserTimelineEventListResponse"];
 export type UserTimelineEventDetail =
@@ -38,6 +35,6 @@ export interface DeleteResponse {
 }
 
 export interface InitialiseAndProgressUser {
-  userStoryState?: components["schemas"]["UserStoryState"] | null;
+  user?: components["schemas"]["User"] | null;
   userTimelineEvents: components["schemas"]["UserTimelineEvent"][];
 }

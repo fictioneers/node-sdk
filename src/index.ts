@@ -10,7 +10,6 @@ import {
   TokenResponse,
   User,
   UserResponse,
-  UserStoryStateResponse,
   UserTimelineEventList,
   UserTimelineEventDetail,
 } from "./types.js";
@@ -428,7 +427,7 @@ class Fictioneers {
     maxSteps?: number | null;
   }): Promise<InitialiseAndProgressUser> {
     // first get or create the user, and get their story state
-    let userStoryState;
+    let user;
     const getUserResponse = await this.getUser();
     if (getUserResponse.data == null) {
       const createUserResponse = await this.createUser({
@@ -437,34 +436,18 @@ class Fictioneers {
         pauseAtBeats,
         maxSteps,
       });
-      userStoryState = createUserResponse.data?.narrative_state;
-    } else {
-      const getUserStoryStateResponse = await this.getUserStoryState();
-      userStoryState = getUserStoryStateResponse.data;
+      user = createUserResponse.data;
     }
 
     // next get their timeline events
     const userTimelineEventsResponse = await this.getUserTimelineEvents();
     const userTimelineEvents = userTimelineEventsResponse.data || [];
     return {
-      userStoryState: userStoryState,
+      user: user,
       userTimelineEvents: userTimelineEvents,
     };
   }
 
-  /* User story state */
-  /* User story state for the authenticated user. */
-
-  /**
-   * Representation of authenticated users narrative story state.
-   * @returns {Promise}
-   * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#retrieves-user-narrative-state
-   */
-  async getUserStoryState(): Promise<UserStoryStateResponse> {
-    return this._doFetch({
-      url: "/user-story-state",
-    });
-  }
 
   /**
    * Progress user step position along the timeline.
@@ -473,18 +456,18 @@ class Fictioneers {
    * @returns {Promise}
    * @link https://storage.googleapis.com/fictioneers-developer-docs/build/index.html#progress-timeline-events
    */
-  async progressUserStoryStateStep({
+  async progressUserStep({
     maxSteps = null,
     pauseAtBeats = true,
   }: {
     maxSteps?: number | string | null;
     pauseAtBeats?: boolean;
-  }): Promise<UserStoryStateResponse> {
+  }): Promise<UserResponse> {
     if (maxSteps !== null && typeof maxSteps == "string") {
       maxSteps = parseInt(maxSteps as string);
     }
     return this._doFetch({
-      url: "/user-story-state/progress-step",
+      url: "/users/me/progress-step",
       method: "POST",
       body: {
         max_steps: maxSteps,
@@ -504,8 +487,9 @@ class Fictioneers {
       url: "/user-timeline-events",
     });
   }
+
   /**
-   * Marks a timeline event as COMPLETED (aka visited), and marks the target event as AVAILABLE (if it has been reached by step based progression)
+   * Updates the "from" timeline event as `VISITED`, and  the "to" timeline event as `ACTIVE`.
    * @param {string} timelineEventId
    * @param {string} linkId
    * @returns {Promise}
