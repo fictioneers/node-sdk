@@ -27,7 +27,7 @@ export interface paths {
     post: operations["token_info_v1_auth_introspect_token_post"];
   };
   "/users/me": {
-    /** Retrieve detailed representation of the current user (and user story state). */
+    /** Retrieve detailed representation of the current user. */
     get: operations["get_user_me_users_me_get"];
     /** Delete the user and any user associated objects from the current timeline. */
     delete: operations["delete_user_users_me_delete"];
@@ -36,13 +36,9 @@ export interface paths {
     /** Create a new audience user for a Fictioneers powered experience. */
     post: operations["create_user_users_post"];
   };
-  "/user-story-state": {
-    /** Representation of authenticated users narrative story state. */
-    get: operations["get_user_story_state_user_story_state_get"];
-  };
-  "/user-story-state/progress-step": {
+  "/users/me/progress-step": {
     /** Progress along the timeline. */
-    post: operations["step_events_for_user_via_post_user_story_state_progress_step_post"];
+    post: operations["step_events_for_user_via_post_users_me_progress_step_post"];
   };
   "/user-timeline-events": {
     /** List endpoint for user timeline events. */
@@ -60,7 +56,7 @@ export interface paths {
     get: operations["get_user_timeline_event_state_changes_user_timeline_event_state_changes_get"];
   };
   "/v1/users/me": {
-    /** Retrieve detailed representation of the current user (and user story state). */
+    /** Retrieve detailed representation of the current user. */
     get: operations["get_user_me_v1_users_me_get"];
     /** Delete the user and any user associated objects from the current timeline. */
     delete: operations["delete_user_v1_users_me_delete"];
@@ -69,13 +65,9 @@ export interface paths {
     /** Create a new audience user for a Fictioneers powered experience. */
     post: operations["create_user_v1_users_post"];
   };
-  "/v1/user-story-state": {
-    /** Representation of authenticated users narrative story state. */
-    get: operations["get_user_story_state_v1_user_story_state_get"];
-  };
-  "/v1/user-story-state/progress-step": {
+  "/v1/users/me/progress-step": {
     /** Progress along the timeline. */
-    post: operations["step_events_for_user_via_post_v1_user_story_state_progress_step_post"];
+    post: operations["step_events_for_user_via_post_v1_users_me_progress_step_post"];
   };
   "/v1/user-timeline-events": {
     /** List endpoint for user timeline events. */
@@ -208,6 +200,15 @@ export interface components {
        * @description The maximum amount of steps that should be progressed. Use `null` to progress until you meet a blocking condition.
        */
       max_steps?: number;
+      /**
+       * Variables
+       * @description Override default variable values.
+       * @default {}
+       * @example {
+       *   "credits": 100
+       * }
+       */
+      variables?: { [key: string]: number };
     };
     /**
      * EventStateChange
@@ -280,7 +281,7 @@ export interface components {
      * to the API.
      */
     Meta: {
-      user_story_state?: components["schemas"]["UserStoryState"];
+      user?: components["schemas"]["User"];
       /**
        * Changed Timeline Events
        * @default []
@@ -490,25 +491,6 @@ export interface components {
        * @example 0HJviYCWMZVYowT7ujWtb7rUEpE3
        */
       id: string;
-      /** Embedded representation of user story state. */
-      narrative_state?: components["schemas"]["UserStoryState"] | null;
-    };
-    /**
-     * UserResponse
-     * @description Base response shape for all single resource Audience API responses.
-     */
-    UserResponse: {
-      data?: components["schemas"]["User"];
-      /** Error */
-      error?: components["schemas"]["GeneralError"] | null;
-      /** Meta */
-      meta?: components["schemas"]["Meta"] | null;
-    };
-    /**
-     * UserStoryState
-     * @description Represents an audience user state and position.
-     */
-    UserStoryState: {
       /**
        * Variables
        * @description User level variable values
@@ -574,11 +556,11 @@ export interface components {
       active_timeline_id: string;
     };
     /**
-     * UserStoryStateResponse
+     * UserResponse
      * @description Base response shape for all single resource Audience API responses.
      */
-    UserStoryStateResponse: {
-      data?: components["schemas"]["UserStoryState"];
+    UserResponse: {
+      data?: components["schemas"]["User"];
       /** Error */
       error?: components["schemas"]["GeneralError"] | null;
       /** Meta */
@@ -1004,7 +986,7 @@ export interface operations {
       };
     };
   };
-  /** Retrieve detailed representation of the current user (and user story state). */
+  /** Retrieve detailed representation of the current user. */
   get_user_me_users_me_get: {
     responses: {
       /** Successful Response */
@@ -1080,36 +1062,13 @@ export interface operations {
       };
     };
   };
-  /** Representation of authenticated users narrative story state. */
-  get_user_story_state_user_story_state_get: {
-    responses: {
-      /** Successful Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["UserStoryStateResponse"];
-        };
-      };
-      /** Authentication Required */
-      401: {
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** Forbidden */
-      403: {
-        content: {
-          "application/json": unknown;
-        };
-      };
-    };
-  };
   /** Progress along the timeline. */
-  step_events_for_user_via_post_user_story_state_progress_step_post: {
+  step_events_for_user_via_post_users_me_progress_step_post: {
     responses: {
       /** Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["UserStoryStateResponse"];
+          "application/json": components["schemas"]["UserResponse"];
         };
       };
       /** Authentication Required */
@@ -1248,7 +1207,7 @@ export interface operations {
       };
     };
   };
-  /** Retrieve detailed representation of the current user (and user story state). */
+  /** Retrieve detailed representation of the current user. */
   get_user_me_v1_users_me_get: {
     responses: {
       /** Successful Response */
@@ -1324,36 +1283,13 @@ export interface operations {
       };
     };
   };
-  /** Representation of authenticated users narrative story state. */
-  get_user_story_state_v1_user_story_state_get: {
-    responses: {
-      /** Successful Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["UserStoryStateResponse"];
-        };
-      };
-      /** Authentication Required */
-      401: {
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** Forbidden */
-      403: {
-        content: {
-          "application/json": unknown;
-        };
-      };
-    };
-  };
   /** Progress along the timeline. */
-  step_events_for_user_via_post_v1_user_story_state_progress_step_post: {
+  step_events_for_user_via_post_v1_users_me_progress_step_post: {
     responses: {
       /** Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["UserStoryStateResponse"];
+          "application/json": components["schemas"]["UserResponse"];
         };
       };
       /** Authentication Required */
