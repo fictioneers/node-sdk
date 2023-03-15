@@ -37,12 +37,11 @@ User from the authentication token.
 - `deleteUser()` => `DELETE /users/me`
 - `createUser({timelineId, disableTimeGuards = false, pauseAtBeats = false})` => `POST /users`
 
-## User story state ##
+## User timeline progression ##
 
-Methods relating to the user's story state
+Increases the user's current step, making more events available.
 
-- `getUserStoryState()` => `GET /user-story-state`
-- `progressUserStoryStateStep({maxSteps = null, pauseAtBeats = true})` => `POST /user-story-state/progress-steps`
+- `progressUserStep({maxSteps = null, pauseAtBeats = true})` => `POST /users/me/progress-step`
 
 ## User timeline events ##
 

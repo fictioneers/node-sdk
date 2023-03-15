@@ -1,6 +1,6 @@
 {
   "name": "fictioneers",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "API Client for interacting with the Fictioneers' APIs from either a browser-side or server-side application",
   "type": "module",
   "main": "./dist/index.js",
