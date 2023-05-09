@@ -12,7 +12,6 @@ export type UserTimelineEventDetail =
 export type TokenResponse = components["schemas"]["TokenResponse"];
 export type UserTimelineEvent = components["schemas"]["UserTimelineEvent"];
 export type ContentIntegration = components["schemas"]["ContentIntegration"];
-export type NarrativeEventType = components["schemas"]["NarrativeEventType"];
 export type GeneralError = components["schemas"]["GeneralError"];
 export type Meta = components["schemas"]["Meta"];
 export type Beat = components["schemas"]["Beat"];
