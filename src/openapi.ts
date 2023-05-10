@@ -205,10 +205,10 @@ export interface components {
        * @description Override default variable values.
        * @default {}
        * @example {
-       *   "credits": 100
+       *   "credits": "100"
        * }
        */
-      variables?: { [key: string]: number };
+      variables?: { [key: string]: string };
     };
     /**
      * EventStateChange
@@ -221,7 +221,6 @@ export interface components {
       narrative_event_id: string;
       /** Timeline Event Id */
       timeline_event_id: string;
-      event_type: components["schemas"]["NarrativeEventType"];
       /** Thread Id */
       thread_id?: string;
       /** Beat Id */
@@ -296,14 +295,6 @@ export interface components {
       service_status?: components["schemas"]["ServiceStatus"];
     };
     /**
-     * NarrativeEventType
-     * @description
-     *     Type of Narrative Event.
-     *
-     * @enum {string}
-     */
-    NarrativeEventType: "SIMPLE" | "ACTIVITY";
-    /**
      * NewUserTimelineEventState
      * @description An enumeration.
      * @enum {string}
@@ -375,11 +366,6 @@ export interface components {
        */
       description?: string;
       /**
-       * @deprecated
-       * @example ACTIVITY
-       */
-      type: components["schemas"]["NarrativeEventType"];
-      /**
        * Step
        * @example 1
        */
@@ -446,7 +432,7 @@ export interface components {
     };
     /**
      * TokenRequest
-     * @description
+     * @description Request data to generate a new access token for the Audience API.
      */
     TokenRequest: {
       /**
@@ -456,7 +442,10 @@ export interface components {
        */
       user_id: string;
     };
-    /** TokenResponse */
+    /**
+     * TokenResponse
+     * @description Data returned when an access token is successfully generated.
+     */
     TokenResponse: {
       /**
        * Access Token
@@ -478,7 +467,7 @@ export interface components {
        * @description New variable value
        * @example 200
        */
-      value: number;
+      value: string;
     };
     /**
      * User
@@ -495,11 +484,11 @@ export interface components {
        * Variables
        * @description User level variable values
        * @example {
-       *   "points": 100,
-       *   "level": 3
+       *   "points": "100",
+       *   "deadline": "2023-03-15T10:35:26.336571"
        * }
        */
-      variables: { [key: string]: number };
+      variables: { [key: string]: string };
       /**
        * Current Step
        * @description Current step index for user in event delivery sequence
@@ -637,11 +626,6 @@ export interface components {
        */
       narrative_event_id: string;
       /**
-       * @deprecated
-       * @example ACTIVITY
-       */
-      narrative_event_type: components["schemas"]["NarrativeEventType"];
-      /**
        * Narrative Event Title
        * @example My narrative event
        */
@@ -743,12 +727,12 @@ export interface components {
        */
       followable: boolean;
       /**
-       * Followed At
+       * Last Followed At
        * Format: date-time
-       * @description Timestamp when the link was followed.
+       * @description Timestamp when the link was last followed.
        * @example 2023-02-03T09:01:23
        */
-      followed_at?: string;
+      last_followed_at?: string;
       /**
        * Condition Datetime
        * Format: date-time
@@ -819,8 +803,6 @@ export interface components {
        * @example 0nfWvgIlDZVk5yndCLKm
        */
       narrative_event_id: string;
-      /** @example ACTIVITY */
-      narrative_event_type: components["schemas"]["NarrativeEventType"];
       /**
        * Narrative Event Title
        * @example My narrative event
@@ -869,13 +851,13 @@ export interface components {
        * Default Value
        * @example 100
        */
-      default_value: number;
+      default_value: string;
       /**
        * Value
        * @description Current value of the variable. For user scoped variables this is always None - see an individual user API response for each unique value.
        * @example 200
        */
-      value?: number;
+      value?: string;
     };
     /**
      * VariableScope
@@ -988,6 +970,11 @@ export interface operations {
   };
   /** Retrieve detailed representation of the current user. */
   get_user_me_users_me_get: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1007,10 +994,21 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
   };
   /** Delete the user and any user associated objects from the current timeline. */
   delete_user_users_me_delete: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       204: never;
@@ -1026,10 +1024,21 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
   };
   /** Create a new audience user for a Fictioneers powered experience. */
   create_user_users_post: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1064,6 +1073,11 @@ export interface operations {
   };
   /** Progress along the timeline. */
   step_events_for_user_via_post_users_me_progress_step_post: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1104,6 +1118,11 @@ export interface operations {
   };
   /** List endpoint for user timeline events. */
   list_user_timeline_events_user_timeline_events_get: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1123,6 +1142,12 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
   };
   /** Update the state of the current event to COMPLETED and make the target of the link AVAILABLE (if it has also been reached by step based progression). */
@@ -1130,6 +1155,9 @@ export interface operations {
     parameters: {
       path: {
         user_timeline_event_id: string;
+      };
+      header: {
+        "fictioneers-user-id"?: string;
       };
     };
     responses: {
@@ -1179,6 +1207,9 @@ export interface operations {
       query: {
         content_type?: string;
       };
+      header: {
+        "fictioneers-user-id"?: string;
+      };
     };
     responses: {
       /** Successful Response */
@@ -1209,6 +1240,11 @@ export interface operations {
   };
   /** Retrieve detailed representation of the current user. */
   get_user_me_v1_users_me_get: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1228,10 +1264,21 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
   };
   /** Delete the user and any user associated objects from the current timeline. */
   delete_user_v1_users_me_delete: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       204: never;
@@ -1247,10 +1294,21 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
   };
   /** Create a new audience user for a Fictioneers powered experience. */
   create_user_v1_users_post: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1285,6 +1343,11 @@ export interface operations {
   };
   /** Progress along the timeline. */
   step_events_for_user_via_post_v1_users_me_progress_step_post: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1325,6 +1388,11 @@ export interface operations {
   };
   /** List endpoint for user timeline events. */
   list_user_timeline_events_v1_user_timeline_events_get: {
+    parameters: {
+      header: {
+        "fictioneers-user-id"?: string;
+      };
+    };
     responses: {
       /** Successful Response */
       200: {
@@ -1344,6 +1412,12 @@ export interface operations {
           "application/json": unknown;
         };
       };
+      /** Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
     };
   };
   /** Update the state of the current event to COMPLETED and make the target of the link AVAILABLE (if it has also been reached by step based progression). */
@@ -1351,6 +1425,9 @@ export interface operations {
     parameters: {
       path: {
         user_timeline_event_id: string;
+      };
+      header: {
+        "fictioneers-user-id"?: string;
       };
     };
     responses: {
@@ -1399,6 +1476,9 @@ export interface operations {
     parameters: {
       query: {
         content_type?: string;
+      };
+      header: {
+        "fictioneers-user-id"?: string;
       };
     };
     responses: {

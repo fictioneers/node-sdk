@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { RawAxiosRequestHeaders } from "axios";
 import { v4 as uuidv4 } from "uuid";
 import {
   AccessTokenResponse,
@@ -14,6 +14,11 @@ import {
   UserTimelineEventDetail,
 } from "./types.js";
 
+
+const DEFAULT_API_VERSION = "1";
+const SECRET_API_KEY_PREFIX = "s_";
+
+
 class Fictioneers {
   private readonly apiKey: string;
   private userId: string;
@@ -27,13 +32,13 @@ class Fictioneers {
   constructor({
     apiKey,
     userId = null,
-    apiVersion = "1",
+    apiVersion = DEFAULT_API_VERSION,
   }: {
     apiKey: string;
     userId?: null | string;
     apiVersion?: string;
   }) {
-    if (apiKey.indexOf("s_") === 0 && typeof window !== "undefined") {
+    if (apiKey.indexOf(SECRET_API_KEY_PREFIX) === 0 && typeof window !== "undefined") {
       console.warn(
         "Warning: It looks like you're using a secret API key client-side, please consider using a visible API key"
       );
@@ -51,7 +56,7 @@ class Fictioneers {
   }
 
   /**
-   * generate and save a new ID Token which can be used to authenticate against the Audience APIs.
+   * Generate and save a new ID Token which can be used to authenticate against the Audience APIs.
    * @returns {object}
    */
   async getAccessToken(): Promise<AccessTokenResponse> {
@@ -61,12 +66,7 @@ class Fictioneers {
         user_id: this.userId,
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Accept-Encoding": "application/json",
-          Authorization: this.apiKey,
-        },
+        headers: this._getAuthHeaderSecretKey()
       }
     );
 
@@ -128,28 +128,51 @@ class Fictioneers {
     }
   }
 
-  private _getAuthHeaderSecretKey(): Record<string, string> {
-    return {
+  /**
+   * Returns a boolean to denote whether the API key is a secret key
+   * @returns {boolean}
+   */
+  private _isKeySecret(): boolean {
+    return this.apiKey.indexOf(SECRET_API_KEY_PREFIX) === 0;
+  }
+
+  /**
+   * Returns key/value pairs of common HTTP request headers to the Fictioneers API.
+   * @returns {boolean}
+   */
+  private _commonRequestHeaders(): RawAxiosRequestHeaders {
+    let commonHeaders: RawAxiosRequestHeaders = {
       "Content-Type": "application/json",
       Accept: "application/json",
       "Accept-Encoding": "application/json",
+    }
+    return commonHeaders;
+  }
+
+  private _getAuthHeaderSecretKey(): RawAxiosRequestHeaders {
+    return {
       Authorization: this.apiKey,
     };
   }
 
-  private async _getAuthHeadersBearer(): Promise<Record<string, string>> {
-    await this.setAccessToken();
-    if (!this.accessToken) {
-      throw new Error(
-        "Could not assemble auth headers with bearer - no access token"
-      );
+  private async _getAuthHeadersAudienceEndpoints(): Promise<RawAxiosRequestHeaders> {
+
+    let headers: RawAxiosRequestHeaders = {}
+
+    if (this._isKeySecret()) {
+      headers['Authorization'] = this.apiKey;
+      headers['Fictioneers-User-ID'] = this.userId;
+    } else {
+      await this.setAccessToken();
+      if (!this.accessToken) {
+        throw new Error(
+          "Could not assemble auth headers with bearer - no access token"
+        );
+      }
+      headers['Authorization'] = `Bearer ${this.accessToken}`
     }
-    return {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Accept-Encoding": "application/json",
-      Authorization: `Bearer ${this.accessToken}`,
-    };
+
+    return headers;
   }
 
   private async _doFetch<T>({
@@ -165,12 +188,15 @@ class Fictioneers {
     body?: null | any;
     deprecated?: boolean;
   }): Promise<T> {
-    let headers;
+
+    let authHeaders;
     if (auth === "bearer") {
-      headers = await this._getAuthHeadersBearer();
+      authHeaders = await this._getAuthHeadersAudienceEndpoints();
     } else {
-      headers = this._getAuthHeaderSecretKey();
+      authHeaders = this._getAuthHeaderSecretKey();
     }
+
+    let headers = {...this._commonRequestHeaders(), ...authHeaders};
 
     let response;
     switch (method) {
@@ -200,13 +226,13 @@ class Fictioneers {
       } as T;
     }
 
-    const r = response.data;
-    if (deprecated && !Array.isArray(r)) {
-      r.error =
-        (r.error ? r.error : "") +
+    const responseData = response.data;
+    if (deprecated && !Array.isArray(responseData)) {
+      responseData.error =
+        (responseData.error ? responseData.error : "") +
         " Notice: this API endpoint has been deprecated and will be removed in a future version of this SDK.";
     }
-    return r;
+    return responseData;
   }
 
   /* Admin */
