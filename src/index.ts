@@ -14,6 +14,11 @@ import {
   UserTimelineEventDetail,
 } from "./types.js";
 
+
+const DEFAULT_API_VERSION = "1";
+const SECRET_API_KEY_PREFIX = "s_";
+
+
 class Fictioneers {
   private readonly apiKey: string;
   private userId: string;
@@ -27,13 +32,13 @@ class Fictioneers {
   constructor({
     apiKey,
     userId = null,
-    apiVersion = "1",
+    apiVersion = DEFAULT_API_VERSION,
   }: {
     apiKey: string;
     userId?: null | string;
     apiVersion?: string;
   }) {
-    if (apiKey.indexOf("s_") === 0 && typeof window !== "undefined") {
+    if (apiKey.indexOf(SECRET_API_KEY_PREFIX) === 0 && typeof window !== "undefined") {
       console.warn(
         "Warning: It looks like you're using a secret API key client-side, please consider using a visible API key"
       );
@@ -130,6 +135,13 @@ class Fictioneers {
 
   private _getAuthHeaderSecretKey(): Record<string, string> {
     return {
+  /**
+   * Returns a boolean to denote whether the API key is a secret key
+   * @returns {boolean}
+   */
+  private _isKeySecret(): boolean {
+    return this.apiKey.indexOf(SECRET_API_KEY_PREFIX) === 0;
+  }
       "Content-Type": "application/json",
       Accept: "application/json",
       "Accept-Encoding": "application/json",
