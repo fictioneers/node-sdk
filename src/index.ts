@@ -200,13 +200,13 @@ class Fictioneers {
       } as T;
     }
 
-    const r = response.data;
-    if (deprecated && !Array.isArray(r)) {
-      r.error =
-        (r.error ? r.error : "") +
+    const responseData = response.data;
+    if (deprecated && !Array.isArray(responseData)) {
+      responseData.error =
+        (responseData.error ? responseData.error : "") +
         " Notice: this API endpoint has been deprecated and will be removed in a future version of this SDK.";
     }
-    return r;
+    return responseData;
   }
 
   /* Admin */
