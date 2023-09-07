@@ -119,6 +119,12 @@ class Fictioneers {
    * @param {string} userId
    */
   async setUserId({ userId }: { userId: string }): Promise<void> {
+
+    // If the user ID being set is already the current user ID, do nothing.
+    if (userId === this.userId) {
+      return;
+    }
+
     if (userId.length) {
       this.userId = userId.toString();
       this.accessToken = null;
